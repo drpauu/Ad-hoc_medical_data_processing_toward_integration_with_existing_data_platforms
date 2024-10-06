@@ -1,0 +1,26 @@
+/* App.css */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.App {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.content {
+  flex: 1; /* Este estilo empuja el footer hacia abajo */
+  padding: 20px; /* Puedes ajustar el padding según sea necesario */
+}
+
+footer {
+  background-color: #f8f8f8;
+  padding: 10px 20px;
+  text-align: center;
+  width: 100%;
+  position: relative;
+  bottom: 0;
+}
