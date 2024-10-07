@@ -113,15 +113,15 @@ const TestDetails = () => {
 
     return (
       <div>
-          <h2>Test Details</h2>
+          <h2>6MWT data:</h2>
 
           <div>
-              <h3>Checkpoints Graph</h3>
+              <h3>Test checkpoints</h3>
               <Line data={checkpointData} options={chartOptions} />
           </div>
 
           <div>
-              <h3>SPO2 and Heart Rate Over Time</h3>
+              <h3>Test data</h3>
               <Line data={spo2HrData} options={chartOptions} />
           </div>
 
@@ -155,7 +155,46 @@ const TestDetails = () => {
               <table>
                   <thead>
                       <tr>
-                          <th colSpan="4" className="table-title">Initial Basals</th>
+                          <th colSpan="4" className="table-title">Antropometric values</th>
+                      </tr>
+                      <tr>
+                          <th>Saturation (spo)</th>
+                          <th>Heart Rate (hr)</th>
+                          <th>Dispnea (d)</th>
+                          <th>Fatiga (f)</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.initial.spo || 'No existeix'}</td>
+                          <td>{database.initial.hr || 'No existeix'}</td>
+                          <td>{database.initial.d || 'No existeix'}</td>
+                          <td>{database.initial.f || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="1" className="table-title">Comments</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.final.comment || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="4" className="table-title">Basal values</th>
                       </tr>
                       <tr>
                           <th>Saturation (spo)</th>
@@ -201,16 +240,172 @@ const TestDetails = () => {
               </table>
           </div>
 
+          
           <div className="formatted-table">
               <table>
                   <thead>
                       <tr>
-                          <th colSpan="1" className="table-title">Comments</th>
+                          <th colSpan="5" className="table-title">Rest values</th>
+                      </tr>
+                      <tr>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Cone Distance</th>
+                          <th>Id</th>
+                          <th>Hash</th>
                       </tr>
                   </thead>
                   <tbody>
                       <tr>
-                          <td>{database.final.comment || 'No existeix'}</td>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="4" className="table-title">Computed values</th>
+                      </tr>
+                      <tr>
+                          <th>Saturation (spo)</th>
+                          <th>Heart Rate (hr)</th>
+                          <th>Dispnea (d)</th>
+                          <th>Fatiga (f)</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.initial.spo || 'No existeix'}</td>
+                          <td>{database.initial.hr || 'No existeix'}</td>
+                          <td>{database.initial.d || 'No existeix'}</td>
+                          <td>{database.initial.f || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+                  <thead>
+                      <tr>
+                          <th>Saturation (spo)</th>
+                          <th>Heart Rate (hr)</th>
+                          <th>Dispnea (d)</th>
+                          <th>Fatiga (f)</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.initial.spo || 'No existeix'}</td>
+                          <td>{database.initial.hr || 'No existeix'}</td>
+                          <td>{database.initial.d || 'No existeix'}</td>
+                          <td>{database.initial.f || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="5" className="table-title">Average values</th>
+                      </tr>
+                      <tr>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Cone Distance</th>
+                          <th>Id</th>
+                          <th>Hash</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="5" className="table-title">Periodic values</th>
+                      </tr>
+                      <tr>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Cone Distance</th>
+                          <th>Id</th>
+                          <th>Hash</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+              </table>
+          </div>
+
+          <div className="formatted-table">
+              <table>
+                  <thead>
+                      <tr>
+                          <th colSpan="5" className="table-title">Checkpoints</th>
+                      </tr>
+                      <tr>
+                          <th>Date</th>
+                          <th>Time</th>
+                          <th>Cone Distance</th>
+                          <th>Id</th>
+                          <th>Hash</th>
+                      </tr>
+                  </thead>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
+                      </tr>
+                  </tbody>
+                  <tbody>
+                      <tr>
+                          <td>{database.test.date || 'No existeix'}</td>
+                          <td>{database.test.time || 'No existeix'}</td>
+                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                          <td>{database.test.tid || 'No existeix'}</td>
+                          <td>{database.test.hash || 'No existeix'}</td>
                       </tr>
                   </tbody>
               </table>
@@ -256,6 +451,7 @@ const TestDetails = () => {
               }
           `}</style>
       </div>
+      
       
   );
 };
