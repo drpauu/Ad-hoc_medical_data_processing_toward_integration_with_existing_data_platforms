@@ -126,30 +126,31 @@ const TestDetails = () => {
           </div>
 
           <div className="formatted-table">
-              <table>
-                  <thead>
-                      <tr>
-                          <th colSpan="5" className="table-title">Test</th>
-                      </tr>
-                      <tr>
-                          <th>Date</th>
-                          <th>Time</th>
-                          <th>Cone Distance</th>
-                          <th>Id</th>
-                          <th>Hash</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr>
-                          <td>{database.test.date || 'No existeix'}</td>
-                          <td>{database.test.time || 'No existeix'}</td>
-                          <td>{database.test.cone_distance || 'No existeix'} mts</td>
-                          <td>{database.test.tid || 'No existeix'}</td>
-                          <td>{database.test.hash || 'No existeix'}</td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
+            <table>
+                <thead>
+                    <tr>
+                        <th colSpan="5" className="table-title">Test</th>
+                    </tr>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Cone Distance</th>
+                        <th>Id</th>
+                        <th>Hash</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        {/* Separar la fecha y hora del campo "date" */}
+                        <td>{database.test.date ? database.test.date.split('T')[0] : 'No existeix'}</td>
+                        <td>{database.test.date ? database.test.date.split('T')[1].split('.')[0] : 'No existeix'}</td>
+                        <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                        <td>{database.test.tid || 'No existeix'}</td>
+                        <td>{database.test.hash || 'No existeix'}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
 
           <div className="formatted-table">
               <table>
