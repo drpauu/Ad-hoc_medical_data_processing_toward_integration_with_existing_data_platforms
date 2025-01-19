@@ -700,88 +700,86 @@ const TestDetails = () => {
 
         </div>
         <div className="formatted-table">
-            <table>
-                <thead>
-                    <tr>
-                    <th colSpan="6" className="table-title">Periodic values</th>
-                    </tr>
-                    <tr>
-                    <th>Min 1</th>
-                    <th>Min 2</th>
-                    <th>Min 3</th>
-                    <th>Min 4</th>
-                    <th>Min 5</th>
-                    <th>Min 6</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {/* Fila 1: Mínimos de SpO₂ para cada minuto */}
-                    <tr>
-                    {(() => {
-                        // 1) Filtrar p=1 (durante la prueba), t >= 0 y < 360
-                        const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
-                        const minSpo2Array = [];
+        <table>
+        <thead>
+            <tr>
+            <th colSpan="6" className="table-title">Periodic values</th>
+            </tr>
+            <tr>
+            <th>Min 1</th>
+            <th>Min 2</th>
+            <th>Min 3</th>
+            <th>Min 4</th>
+            <th>Min 5</th>
+            <th>Min 6</th>
+            </tr>
+        </thead>
+        <tbody>
+            {/* Fila 1: última medición de SpO2 por minuto (opcional) */}
+            <tr>
+            {(() => {
+                // Filtrar p=1 y t en [0..359]
+                const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                const lastSpo2Array = [];
 
-                        // 2) Para cada minuto (1..6), encontrar min(s)
-                        for (let min = 1; min <= 6; min++) {
-                        const start = (min - 1) * 60; 
-                        const end = min * 60; 
-                        const subset = dataP1.filter(d => d.t >= start && d.t < end);
+                for (let minute = 1; minute <= 6; minute++) {
+                const start = (minute - 1) * 60; 
+                const end   = minute * 60;
+                
+                // Subconjunto de datos para ese minuto
+                const subset = dataP1.filter(d => d.t >= start && d.t < end);
 
-                        let localMinS = null;
-                        for (let i = 0; i < subset.length; i++) {
-                            const sVal = subset[i].s;
-                            if (typeof sVal === 'number') {
-                            if (localMinS === null || sVal < localMinS) {
-                                localMinS = sVal;
-                            }
-                            }
-                        }
-                        minSpo2Array.push(localMinS);
-                        }
+                // Escoger la medición de SpO2 con el t más grande (la "última" lectura)
+                let lastPoint = null;
+                for (let i = 0; i < subset.length; i++) {
+                    const current = subset[i];
+                    if (!lastPoint || current.t > lastPoint.t) {
+                    lastPoint = current;
+                    }
+                }
+                // Guardar SpO2 de esa última lectura, si existe
+                lastSpo2Array.push(lastPoint ? lastPoint.s : null);
+                }
 
-                        // 3) Render 6 <td> con los min de SpO2, o "No data" si no hay nada
-                        return minSpo2Array.map((val, idx) => (
-                        <td key={`minS-${idx}`}>
-                            {val != null ? val + ' %' : 'No data'}
-                        </td>
-                        ));
-                    })()}
-                    </tr>
+                return lastSpo2Array.map((val, idx) => (
+                <td key={`lastSpO2-${idx}`}>
+                    {val != null ? val + ' %' : 'No data'}
+                </td>
+                ));
+            })()}
+            </tr>
 
-                    {/* Fila 2: Mínimos de HR para cada minuto */}
-                    <tr>
-                    {(() => {
-                        const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
-                        const minHrArray = [];
+            {/* Fila 2: última medición de HR por minuto */}
+            <tr>
+            {(() => {
+                const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                const lastHrArray = [];
 
-                        for (let min = 1; min <= 6; min++) {
-                        const start = (min - 1) * 60;
-                        const end = min * 60;
-                        const subset = dataP1.filter(d => d.t >= start && d.t < end);
+                for (let minute = 1; minute <= 6; minute++) {
+                const start = (minute - 1) * 60; 
+                const end   = minute * 60;
+                const subset = dataP1.filter(d => d.t >= start && d.t < end);
 
-                        let localMinH = null;
-                        for (let i = 0; i < subset.length; i++) {
-                            const hVal = subset[i].h;
-                            if (typeof hVal === 'number') {
-                            if (localMinH === null || hVal < localMinH) {
-                                localMinH = hVal;
-                            }
-                            }
-                        }
-                        minHrArray.push(localMinH);
-                        }
+                // Hallar el 't' más grande en ese rango
+                let lastPoint = null;
+                for (let i = 0; i < subset.length; i++) {
+                    const current = subset[i];
+                    if (!lastPoint || current.t > lastPoint.t) {
+                    lastPoint = current;
+                    }
+                }
+                lastHrArray.push(lastPoint ? lastPoint.h : null);
+                }
 
-                        return minHrArray.map((val, idx) => (
-                        <td key={`minH-${idx}`}>
-                            {val != null ? val + ' ppm' : 'No data'}
-                        </td>
-                        ));
-                    })()}
-                    </tr>
-                </tbody>
-            </table>
-
+                return lastHrArray.map((val, idx) => (
+                <td key={`lastHr-${idx}`}>
+                    {val != null ? val + ' ppm' : 'No data'}
+                </td>
+                ));
+            })()}
+            </tr>
+        </tbody>
+        </table>
         </div>
 
         <div className="formatted-table">
