@@ -8,11 +8,16 @@
   },
   "dependencies": {
     "chart.js": "^4.4.4",
+    "html-to-pdfmake": "^2.5.20",
+    "html2canvas": "^1.4.1",
+    "html2pdf.js": "^0.10.2",
+    "jspdf": "^2.5.2",
+    "pdfmake": "^0.2.18",
     "react": "^18.0.0",
     "react-chartjs-2": "^5.2.0",
     "react-dom": "^18.0.0",
     "react-router-dom": "^6.26.2",
-    "react-scripts": "^5.0.1"
+    "xlsx": "^0.18.5"
   },
   "browserslist": {
     "production": [
@@ -25,5 +30,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "react-scripts": "^5.0.1"
   }
 }
