@@ -1,0 +1,39 @@
+.test-details {
+    width: 100%;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .section-title {
+    background-color: #2F4F4F;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    margin-top: 20px;
+  }
+  
+  .table {
+    display: table;
+    width: 100%;
+    margin-bottom: 20px;
+    border-collapse: collapse;
+  }
+  
+  .row {
+    display: table-row;
+  }
+  
+  .cell {
+    display: table-cell;
+    padding: 10px;
+    text-align: center;
+    border: 1px solid #333;
+    background-color: #F0F0F0;
+  }
+  
+  .header .cell {
+    background-color: #2F4F4F;
+    color: white;
+    font-weight: bold;
+  }
+  
