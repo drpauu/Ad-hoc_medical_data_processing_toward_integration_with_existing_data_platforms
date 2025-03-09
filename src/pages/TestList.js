@@ -1,36 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import data from '../json/database.json';  // Importamos el JSON directamente
 
 const TestList = () => {
   const [tests, setTests] = useState([]);
 
   useEffect(() => {
-    if (data && data.test) {
-      // Verificamos si `test` es un array o un objeto
-      if (Array.isArray(data.test)) {
-        setTests(data.test);
-      } else {
-        // Si no es un array, lo convertimos en un array con un solo elemento
-        setTests([data.test]);
-      }
-    }
+    fetch('http://localhost:5000/api/tests')
+      .then(response => response.json())
+      .then(data => setTests(data))
+      .catch(error => console.error('Error al obtener los tests:', error));
   }, []);
-
-  if (tests.length === 0) {
-    return <p>No tests available.</p>;
-  }
 
   return (
     <div>
-      <h1>List of Tests</h1>
+      <h2>Lista de Tests</h2>
       <ul>
-        {tests.map((test, index) => (
-          <li key={index}>
-            {/* Mostramos el ID del test */}
-            <Link to={`/test/${test.tid}`}>
-              Test {index + 1}: ID {test.tid}
-            </Link>
+        {tests.map(test => (
+          <li key={test._id}>
+            {/* Puedes mostrar algún identificador o campo descriptivo del test */}
+            <Link to={`/test/${test._id}`}>{test.test.pid}</Link>
           </li>
         ))}
       </ul>
