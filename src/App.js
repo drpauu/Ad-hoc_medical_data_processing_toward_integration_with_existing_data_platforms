@@ -4,7 +4,7 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
 import TestList from './pages/TestList';
-import TestDetails from './pages/TestDetails';
+import TestDetails from './pages/testDetails2';
 import './App.css'; // Importamos los estilos globales
 
 function App() {
