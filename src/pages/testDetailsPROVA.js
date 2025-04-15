@@ -1,167 +1,7 @@
-import React, { useRef, useState, useEffect } from 'react';
-import { Line } from 'react-chartjs-2';
-import { useParams } from 'react-router-dom';
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend
-} from 'chart.js';
 
-ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
-
-const TestDetails = () => {
-  // Ref for the content that will be included in the PDF
-  const contentRef = useRef(null);
-  const { id } = useParams(); // Extract test id from URL
-  const [test, setTest] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  // State for table selections
-  const [selectedTables, setSelectedTables] = useState({
-    test: true,
-    antropometric: true,
-    comments: true,
-    basal: true,
-    final: true,
-    rest: true,
-    computed1: true,
-    average: true,
-    periodic: true,
-    checkpoints: true,
-  });
-
-  useEffect(() => {
-    // Assumes your API endpoint returns a complete data object with keys like test, data, pascon, initial, final, stops, etc.
-    fetch(`http://localhost:5000/api/tests/${id}`)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error en la respuesta de la red');
-        }
-        return response.json();
-      })
-      .then(data => {
-        setTest(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error al obtener los detalles del test:', err);
-        setError(err);
-        setLoading(false);
-      });
-  }, [id]);
-
-  // Download handlers (placeholder logic)
-  const handleDownloadPdf = () => {
-    console.log('Descargar PDF clicked');
-    // Implement PDF generation logic using the content in contentRef
-  };
-
-  const handleDownloadExcel = () => {
-    console.log('Descargar Excel clicked');
-    // Implement Excel generation logic based on selected table data
-  };
-
-  // Toggle the table selection state
-  const handleTableSelection = (tableName) => {
-    setSelectedTables(prev => ({
-      ...prev,
-      [tableName]: !prev[tableName],
-    }));
-  };
-
-  if (loading) return <div>Cargando datos...</div>;
-  if (error) return <div>Error: {error.message}</div>;
-  if (!test) return <div>No hay datos del test disponibles</div>;
-
-  // Prepare chart data
-  const testData = test.data || [];
-  const spoData = testData.map(item => ({ x: item.t, y: item.s }));
-  const hrData = testData.map(item => ({ x: item.t, y: item.h }));
-  const checkpointTimes = test.pascon.map(item => item.t);
-  const checkpointSpo = test.pascon.map(item => item.s);
-  const checkpointHr = test.pascon.map(item => item.h);
-
-  const spo2HrData = {
-    labels: spoData.map(d => d.x),
-    datasets: [
-      {
-        label: 'SPO2',
-        data: spoData.map(d => d.y),
-        borderColor: 'rgba(75,192,192,1)',
-        fill: false,
-        tension: 0.1,
-        pointRadius: 0,
-        hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
-      },
-      {
-        label: 'HR',
-        data: hrData.map(d => d.y),
-        borderColor: 'rgba(255,99,132,1)',
-        fill: false,
-        tension: 0.1,
-        pointRadius: 0,
-        hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(255,99,132,1)',
-      }
-    ]
-  };
-
-  const checkpointData = {
-    labels: checkpointTimes,
-    datasets: [
-      {
-        label: 'Checkpoint SPO2',
-        data: checkpointSpo,
-        borderColor: 'blue',
-        backgroundColor: 'rgba(54, 162, 235, 0.2)',
-        fill: false,
-        pointRadius: 5,
-      },
-      {
-        label: 'Checkpoint HR',
-        data: checkpointHr,
-        borderColor: 'red',
-        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-        fill: false,
-        pointRadius: 5,
-      },
-    ],
-  };
-
-  const chartOptions = {
-    scales: {
-      x: { type: 'linear', title: { display: true, text: 'Tiempo (s)' } },
-      y: { title: { display: true, text: 'Valor' }, ticks: { stepSize: 1 } }
-    },
-    hover: { mode: 'nearest', intersect: true },
-    plugins: {
-      tooltip: {
-        mode: 'nearest',
-        intersect: true,
-        callbacks: {
-          label: function(tooltipItem) {
-            let label = tooltipItem.dataset.label || '';
-            if (label) {
-              label += ': ';
-            }
-            label += Math.round(tooltipItem.raw * 100) / 100;
-            return label;
-          }
-        }
-      }
-    }
-  };
-
-  return (
+return (
     <div style={{ position: 'relative' }}>
-      {/* BOTONES */}
+      {/*  BOTONES  */}
       <button
         onClick={handleDownloadPdf}
         style={{
@@ -179,6 +19,7 @@ const TestDetails = () => {
       >
         Descargar PDF
       </button>
+
       <button
         onClick={handleDownloadExcel}
         style={{
@@ -260,6 +101,7 @@ const TestDetails = () => {
             Rest values
           </label>
         </div>
+        {/* Computed(1) - unificado */}
         <div>
           <label>
             <input
@@ -309,14 +151,17 @@ const TestDetails = () => {
           <h3>Test checkpoints</h3>
           <Line data={checkpointData} options={chartOptions} />
         </div>
+
         <div>
           <h3>Test data</h3>
           <Line data={spo2HrData} options={chartOptions} />
         </div>
       </div>
 
-      {/* TABLAS (dentro del ref => incluidas en PDF), se renderizan según la selección */}
+      {/* TABLAS (dentro del ref => incluidas en PDF), 
+          pero sólo se renderizan si el user las selecciona */}
       <div ref={contentRef} style={{ marginTop: '30px' }}>
+
         {/* ---- Tabla: TEST ---- */}
         {selectedTables.test && (
           <div className="formatted-table">
@@ -335,11 +180,11 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.test.date ? test.test.date.split('T')[0] : 'No existeix'}</td>
-                  <td>{test.test.date ? test.test.date.split('T')[1].split('.')[0] : 'No existeix'}</td>
-                  <td>{test.test.cone_distance || 'No existeix'} mts</td>
-                  <td>{test.test.hash || 'No existeix'}</td>
-                  <td>{test.test.tid || 'No existeix'}</td>
+                  <td>{database.test.date ? database.test.date.split('T')[0] : 'No existeix'}</td>
+                  <td>{database.test.date ? database.test.date.split('T')[1].split('.')[0] : 'No existeix'}</td>
+                  <td>{database.test.cone_distance || 'No existeix'} mts</td>
+                  <td>{database.test.hash || 'No existeix'}</td>
+                  <td>{database.test.tid || 'No existeix'}</td>
                 </tr>
               </tbody>
             </table>
@@ -364,20 +209,22 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.test.name ?? 'AAAA'}</td>
-                  <td>{test.test.gender ?? 'Female'}</td>
-                  <td>{test.test.age ? `${test.test.age} y` : 'No existeix'}</td>
+                  <td>{database.test.name ?? 'AAAA'}</td>
+                  <td>{database.test.gender ?? 'Female'}</td>
                   <td>
-                    {test.test.weight && test.test.height
-                      ? `${test.test.weight} Kg - ${test.test.height} Cms`
+                    {database.test.age ? `${database.test.age} y` : 'No existeix'}
+                  </td>
+                  <td>
+                    {database.test.weight && database.test.height
+                      ? `${database.test.weight} Kg - ${database.test.height} Cms`
                       : 'No existeix'
                     }
                   </td>
                   <td>
-                    {test.test.weight && test.test.height
+                    {database.test.weight && database.test.height
                       ? (
-                          test.test.weight /
-                          ((test.test.height / 100) ** 2)
+                          database.test.weight /
+                          ((database.test.height / 100) ** 2)
                         ).toFixed(1) + ' kg/m²'
                       : 'No existeix'
                     }
@@ -400,7 +247,7 @@ const TestDetails = () => {
               <tbody>
                 <tr>
                   <td style={{ whiteSpace: 'pre-line' }}>
-                    {test.final.comment?.trim() || 'No existeix'}
+                    {database.final.comment?.trim() || 'No existeix'}
                   </td>
                 </tr>
               </tbody>
@@ -427,12 +274,38 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.initial.spo != null ? `${test.initial.spo} %` : 'No existeix'}</td>
-                  <td>{test.initial.hr != null ? `${test.initial.hr} ppm` : 'No existeix'}</td>
-                  <td>{(test.initial.hr != null && test.test.age != null) ? `${((test.initial.hr / (220 - test.test.age)) * 100).toFixed(1)} %` : 'No existeix'}</td>
-                  <td>{test.initial.d != null ? `${test.initial.d} Borg` : 'No existeix'}</td>
-                  <td>{test.initial.f != null ? `${test.initial.f} Borg` : 'No existeix'}</td>
-                  <td>{test.test.o2 != null ? `${test.test.o2} lit.` : 'No existeix'}</td>
+                  <td>
+                    {database.initial.spo != null
+                      ? `${database.initial.spo} %`
+                      : 'No existeix'}
+                  </td>
+                  <td>
+                    {database.initial.hr != null
+                      ? `${database.initial.hr} ppm`
+                      : 'No existeix'}
+                  </td>
+                  <td>
+                    {(database.initial.hr != null && database.test.age != null)
+                      ? `${(
+                          (database.initial.hr / (220 - database.test.age)) * 100
+                        ).toFixed(1)} %`
+                      : 'No existeix'}
+                  </td>
+                  <td>
+                    {database.initial.d != null
+                      ? `${database.initial.d} Borg`
+                      : 'No existeix'}
+                  </td>
+                  <td>
+                    {database.initial.f != null
+                      ? `${database.initial.f} Borg`
+                      : 'No existeix'}
+                  </td>
+                  <td>
+                    {database.test.o2 != null
+                      ? `${database.test.o2} lit.`
+                      : 'No existeix'}
+                  </td>
                 </tr>
               </tbody>
             </table>
@@ -455,9 +328,9 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.final.meters || 'No existeix'} mts</td>
-                  <td>{test.final.d || 'No existeix'} Borg</td>
-                  <td>{test.final.f || 'No existeix'} Borg</td>
+                  <td>{database.final.meters || 'No existeix'} mts</td>
+                  <td>{database.final.d || 'No existeix'} Borg</td>
+                  <td>{database.final.f || 'No existeix'} Borg</td>
                 </tr>
               </tbody>
             </table>
@@ -483,19 +356,53 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.final.half_rest_spo != null ? `${test.final.half_rest_spo} %` : 'No existeix'}</td>
-                  <td>{test.final.half_rest_hr != null ? `${test.final.half_rest_hr} ppm` : 'No existeix'}</td>
-                  <td>{(test.final.half_rest_hr != null && test.test.age != null) ? `${((test.final.half_rest_hr / (220 - test.test.age)) * 100).toFixed(1)} %` : 'No existeix'}</td>
-                  <td>{test.final.end_rest_spo != null ? `${test.final.end_rest_spo} %` : 'No existeix'}</td>
-                  <td>{test.final.end_rest_hr != null ? `${test.final.end_rest_hr} ppm` : 'No existeix'}</td>
-                  <td>{(test.final.end_rest_hr != null && test.test.age != null) ? `${((test.final.end_rest_hr / (220 - test.test.age)) * 100).toFixed(1)} %` : 'No existeix'}</td>
+                  <td>
+                    {database.final.half_rest_spo != null
+                      ? `${database.final.half_rest_spo} %`
+                      : 'No existeix'
+                    }
+                  </td>
+                  <td>
+                    {database.final.half_rest_hr != null
+                      ? `${database.final.half_rest_hr} ppm`
+                      : 'No existeix'
+                    }
+                  </td>
+                  <td>
+                    {(database.final.half_rest_hr != null && database.test.age != null)
+                      ? `${(
+                          (database.final.half_rest_hr / (220 - database.test.age)) * 100
+                        ).toFixed(1)} %`
+                      : 'No existeix'
+                    }
+                  </td>
+                  <td>
+                    {database.final.end_rest_spo != null
+                      ? `${database.final.end_rest_spo} %`
+                      : 'No existeix'
+                    }
+                  </td>
+                  <td>
+                    {database.final.end_rest_hr != null
+                      ? `${database.final.end_rest_hr} ppm`
+                      : 'No existeix'
+                    }
+                  </td>
+                  <td>
+                    {(database.final.end_rest_hr != null && database.test.age != null)
+                      ? `${(
+                          (database.final.end_rest_hr / (220 - database.test.age)) * 100
+                        ).toFixed(1)} %`
+                      : 'No existeix'
+                    }
+                  </td>
                 </tr>
               </tbody>
             </table>
           </div>
         )}
 
-        {/* ---- Tabla: COMPUTED (COMPUTED1) (UNIFICADA) ---- */}
+        {/* ---- Tabla: Computed(1) (UNIFICADA) ---- */}
         {selectedTables.computed1 && (
           <div className="formatted-table">
             <table>
@@ -514,10 +421,10 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 {(() => {
-                  const weight = test.test.weight ?? 0;
-                  const height = test.test.height ?? 0;
-                  const age = test.test.age ?? 0;
-                  const actualDistance = test.final.meters ?? 0;
+                  const weight = database.test.weight ?? 0;
+                  const height = database.test.height ?? 0;
+                  const age = database.test.age ?? 0;
+                  const actualDistance = database.final.meters ?? 0;
 
                   const enrightD = (2.11 * height) - (2.29 * weight) - (5.78 * age) + 667;
                   let enrightPercent = 0;
@@ -526,7 +433,7 @@ const TestDetails = () => {
                   }
 
                   const sixMWWork = actualDistance * weight;
-                  const data6MW = (test.data || []).filter(d => d.p === 1);
+                  const data6MW = (database.data || []).filter(d => d.p === 1);
 
                   let lowestSpo2 = 999;
                   data6MW.forEach(d => {
@@ -575,13 +482,13 @@ const TestDetails = () => {
               </thead>
               <tbody>
                 {(() => {
-                  const stopsArray = test.stops || [];
+                  const stopsArray = database.stops || [];
                   const stopsText = stopsArray
                     .map(stop => `${stop.time}" with duration: ${stop.len}"`)
                     .join('\n');
                   const stopsTime = stopsArray.reduce((sum, s) => sum + (s.len ?? 0), 0);
 
-                  const data6MW = (test.data || []).filter(d => d.p === 1);
+                  const data6MW = (database.data || []).filter(d => d.p === 1);
                   let sumSpo2 = 0, countSpo2 = 0;
                   data6MW.forEach(d => {
                     if (typeof d.s === 'number') {
@@ -609,7 +516,7 @@ const TestDetails = () => {
                     }
                   });
 
-                  const finalMeters = test.final.meters ?? 0;
+                  const finalMeters = database.final.meters ?? 0;
                   const sixmwSpeed = finalMeters ? (finalMeters / 360) : 0;
 
                   return (
@@ -650,7 +557,7 @@ const TestDetails = () => {
               <tbody>
                 <tr>
                   {(() => {
-                    const dataP1 = (test.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                    const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
                     const avgSpo2Array = [];
                     for (let min = 1; min <= 6; min++) {
                       const start = (min - 1) * 60;
@@ -666,6 +573,7 @@ const TestDetails = () => {
                       });
                       avgSpo2Array.push(countS ? (sumS / countS) : null);
                     }
+
                     return avgSpo2Array.map((val, idx) => (
                       <td key={`avgS-${idx}`}>
                         {val != null ? val.toFixed(1) + ' %' : 'No data'}
@@ -675,7 +583,7 @@ const TestDetails = () => {
                 </tr>
                 <tr>
                   {(() => {
-                    const dataP1 = (test.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                    const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
                     const avgHrArray = [];
                     for (let min = 1; min <= 6; min++) {
                       const start = (min - 1) * 60;
@@ -691,6 +599,7 @@ const TestDetails = () => {
                       });
                       avgHrArray.push(countH ? (sumH / countH) : null);
                     }
+
                     return avgHrArray.map((val, idx) => (
                       <td key={`avgH-${idx}`}>
                         {val != null ? val.toFixed(0) + ' ppm' : 'No data'}
@@ -723,12 +632,13 @@ const TestDetails = () => {
               <tbody>
                 <tr>
                   {(() => {
-                    const dataP1 = (test.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                    const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
                     const lastSpo2Array = [];
                     for (let minute = 1; minute <= 6; minute++) {
                       const start = (minute - 1) * 60;
                       const end   = minute * 60;
                       const subset = dataP1.filter(d => d.t >= start && d.t < end);
+
                       let lastPoint = null;
                       subset.forEach(current => {
                         if (!lastPoint || current.t > lastPoint.t) {
@@ -737,6 +647,7 @@ const TestDetails = () => {
                       });
                       lastSpo2Array.push(lastPoint ? lastPoint.s : null);
                     }
+
                     return lastSpo2Array.map((val, idx) => (
                       <td key={`lastSpO2-${idx}`}>
                         {val != null ? val + ' %' : 'No data'}
@@ -746,12 +657,13 @@ const TestDetails = () => {
                 </tr>
                 <tr>
                   {(() => {
-                    const dataP1 = (test.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
+                    const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
                     const lastHrArray = [];
                     for (let minute = 1; minute <= 6; minute++) {
                       const start = (minute - 1) * 60;
                       const end   = minute * 60;
                       const subset = dataP1.filter(d => d.t >= start && d.t < end);
+
                       let lastPoint = null;
                       subset.forEach(current => {
                         if (!lastPoint || current.t > lastPoint.t) {
@@ -760,6 +672,7 @@ const TestDetails = () => {
                       });
                       lastHrArray.push(lastPoint ? lastPoint.h : null);
                     }
+
                     return lastHrArray.map((val, idx) => (
                       <td key={`lastHr-${idx}`}>
                         {val != null ? val + ' ppm' : 'No data'}
@@ -788,8 +701,8 @@ const TestDetails = () => {
                 </tr>
               </thead>
               <tbody>
-                {(test.pascon || []).map((cp, idx) => {
-                  const coneDist = test.test?.cone_distance ?? 30;
+                {(database.pascon || []).map((cp, idx) => {
+                  const coneDist = database.test?.cone_distance ?? 30;
                   const totalMeters = (cp.n + 1) * coneDist;
                   return (
                     <tr key={idx}>
@@ -809,31 +722,37 @@ const TestDetails = () => {
           .formatted-table {
             margin-top: 20px;
           }
+
           table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
           }
+
           th, td {
             padding: 8px;
             text-align: center;
           }
+
           .table-title {
-            background-color: #2F4F4F;
+            background-color: #2F4F4F; 
             color: white;
             font-weight: bold;
             font-size: 1.2em;
             height: 45px;
           }
+
           th {
             background-color: #4B6969;
             color: white;
             font-weight: bold;
           }
+
           td {
             background-color: #E0E0E0;
             color: #333;
           }
+
           tr:nth-child(even) td {
             background-color: #f2f2f2;
           }
@@ -841,6 +760,3 @@ const TestDetails = () => {
       </div>
     </div>
   );
-};
-
-export default TestDetails;
