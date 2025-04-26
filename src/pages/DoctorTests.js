@@ -49,5 +49,3 @@ const DoctorTests = () => {
 };
 
 export default DoctorTests;
-
-<Link to={`/test/${test._id}`}>{test.test.pid}</Link>
