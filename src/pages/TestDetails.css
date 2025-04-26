@@ -1,15 +1,28 @@
-.test-details {
+
+  :global(:root) {
+    --color-primary: #00407C;
+    --color-secondary: #83C3C2;
+    --color-bg-light: #F5F5F5;
+    --color-text-dark: #4D4D4D;
+    --font-sans: 'Open Sans', sans-serif;
+    --border-radius: 4px;
+  }
+
+  .test-details {
     width: 100%;
     margin: 0 auto;
-    font-family: Arial, sans-serif;
+    font-family: var(--font-sans);
+    color: var(--color-text-dark);
   }
   
   .section-title {
-    background-color: #2F4F4F;
-    color: white;
+    background-color: var(--color-primary);
+    color: #fff;
     text-align: center;
     padding: 10px;
     margin-top: 20px;
+    font-weight: 700;
+    text-transform: uppercase;
   }
   
   .table {
@@ -17,6 +30,9 @@
     width: 100%;
     margin-bottom: 20px;
     border-collapse: collapse;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border-radius: var(--border-radius);
+    overflow: hidden;
   }
   
   .row {
@@ -25,15 +41,21 @@
   
   .cell {
     display: table-cell;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
-    border: 1px solid #333;
-    background-color: #F0F0F0;
+    border: 1px solid rgba(0,0,0,0.1);
+    background-color: #fff;
+    color: var(--color-text-dark);
+  }
+
+  /* Alterna fondo suave en filas pares */
+  .row:nth-child(even) .cell {
+    background-color: var(--color-bg-light);
   }
   
   .header .cell {
-    background-color: #2F4F4F;
-    color: white;
-    font-weight: bold;
+    background-color: var(--color-secondary);
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
   }
-  

@@ -477,37 +477,50 @@ const checkpointData = {
   return (
     <div style={{ position: 'relative' }}>
       {/* BOTONES */}
-      <button
+        <button
         onClick={handleDownloadPdf}
         style={{
           position: 'absolute',
           top: 0,
           right: 0,
-          backgroundColor: '#4CAF50',
-          color: 'white',
-          padding: '8px 12px',
+          backgroundColor: '#00407C',                   // Navy Hospital del Mar
+          color: '#FFFFFF',
+          padding: '10px 20px',                          // un poco más generoso que antes
           cursor: 'pointer',
           border: 'none',
-          borderRadius: '4px',
+          borderRadius: '4px',                           // radio consistente
+          fontFamily: 'Open Sans, sans-serif',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          transition: 'opacity 0.2s ease',
           zIndex: 9999
         }}
+        onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+        onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
       >
         Descargar PDF
       </button>
+
       <button
         onClick={handleDownloadExcel}
         style={{
           position: 'absolute',
           top: 40,
           right: 0,
-          backgroundColor: '#2196F3',
-          color: 'white',
-          padding: '8px 12px',
+          backgroundColor: '#83C3C2',                   // Azul verdoso suave
+          color: '#FFFFFF',
+          padding: '10px 20px',
           cursor: 'pointer',
           border: 'none',
           borderRadius: '4px',
+          fontFamily: 'Open Sans, sans-serif',
+          fontWeight: '700',
+          textTransform: 'uppercase',
+          transition: 'opacity 0.2s ease',
           zIndex: 9999
         }}
+        onMouseEnter={e => (e.currentTarget.style.opacity = '0.85')}
+        onMouseLeave={e => (e.currentTarget.style.opacity = '1')}
       >
         Descargar Excel
       </button>
@@ -1049,38 +1062,64 @@ const checkpointData = {
         )}
 
         <style jsx>{`
+          /* Hospital del Mar */
+          :global(:root) {
+            --color-primary: #00407C;
+            --color-secondary: #83C3C2; 
+            --color-bg-light: #F5F5F5;
+            --color-text-dark: #4D4D4D;
+            --border-radius: 4px;
+            --font-sans: 'Open Sans', sans-serif;
+          }
+
           .formatted-table {
             margin-top: 20px;
+            font-family: var(--font-sans);
           }
+
           table {
             width: 100%;
             border-collapse: collapse;
             margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: var(--border-radius);
+            overflow: hidden;
           }
+
+          .table-title {
+            background-color: var(--color-primary);
+            color: #fff;
+            font-weight: 700;
+            font-size: 1.2em;
+            text-transform: uppercase;
+            height: 45px;
+            line-height: 45px;
+            padding: 0 12px;
+          }
+
           th, td {
-            padding: 8px;
+            padding: 12px;
             text-align: center;
           }
-          .table-title {
-            background-color: #2F4F4F;
-            color: white;
-            font-weight: bold;
-            font-size: 1.2em;
-            height: 45px;
-          }
+
           th {
-            background-color: #4B6969;
-            color: white;
-            font-weight: bold;
+            background-color: var(--color-secondary);
+            color: #fff;
+            font-weight: 700;
+            text-transform: uppercase;
           }
+
           td {
-            background-color: #E0E0E0;
-            color: #333;
+            background-color: #fff;
+            color: var(--color-text-dark);
           }
+
           tr:nth-child(even) td {
-            background-color: #f2f2f2;
+            background-color: var(--color-bg-light);
           }
         `}</style>
+
+
       </div>
     </div>
   );

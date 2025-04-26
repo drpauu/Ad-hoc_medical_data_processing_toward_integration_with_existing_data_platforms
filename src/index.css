@@ -1,10 +1,23 @@
+/* Global reset and base styles adapted al estilo Hospital del Mar */
+:root {
+  --color-primary: #00407C;
+  --color-secondary: #83C3C2;
+  --color-bg-light: #F5F5F5;
+  --color-text-dark: #4D4D4D;
+  --border-radius: 4px;
+  --font-sans: 'Open Sans', sans-serif;
+}
+
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
-  
-  body {
-    font-family: 'Arial', sans-serif;
-  }
-  
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: 16px;
+  line-height: 1.5;
+  background-color: var(--color-bg-light);
+  color: var(--color-text-dark);
+}
