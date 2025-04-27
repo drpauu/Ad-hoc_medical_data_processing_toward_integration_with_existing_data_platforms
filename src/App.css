@@ -37,7 +37,7 @@ html, body {
   margin: 0 auto;
 }
 
-/* 5. Footer al estilo Hospital del Mar */
+/* 5. Footer al estilo Hospital del Mar 
 footer {
   background-color: var(--color-bg-light);
   border-top: 1px solid rgba(0, 0, 0, 0.1);
@@ -48,7 +48,7 @@ footer {
   color: var(--color-text-dark);
 }
 
-/* Enlaces del footer */
+ Enlaces del footer */
 footer a {
   color: var(--color-primary);
   text-decoration: none;
