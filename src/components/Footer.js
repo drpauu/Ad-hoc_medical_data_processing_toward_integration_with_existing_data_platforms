@@ -204,11 +204,13 @@ export default function Footer() {
         }
         .logo-box {
           background: #ffffff;
-          padding: 16px;
+          padding: 10px;
           border-radius: var(--border-radius);
           display: flex;
           align-items: center;
           justify-content: center;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+          transition: transform 0.2s;
         }
         .logo-box img {
           max-height: 55px;

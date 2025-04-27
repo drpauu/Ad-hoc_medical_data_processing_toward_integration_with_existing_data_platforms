@@ -1,23 +1,83 @@
-/* Global reset and base styles adapted al estilo Hospital del Mar */
-:root {
-  --color-primary: #00407C;
-  --color-secondary: #83C3C2;
-  --color-bg-light: #F5F5F5;
-  --color-text-dark: #4D4D4D;
-  --border-radius: 4px;
-  --font-sans: 'Open Sans', sans-serif;
-}
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-body {
-  font-family: var(--font-sans);
-  font-size: 16px;
-  line-height: 1.5;
-  background-color: var(--color-bg-light);
-  color: var(--color-text-dark);
-}
+/* ----------------------------------------
+   Reset bàsic + variables d’Hospital del Mar
+   ---------------------------------------- */
+   :root {
+    --hm-primary:      #00407C;
+    --hm-secondary:    #83C3C2;
+    --hm-gray-light:   #F5F5F5;   /* gris de fons exterior */
+    --hm-white:        #FFFFFF;   /* blanc de contingut */
+    --hm-border-light: #E0E0E0;   /* línies molt suaus */
+    --hm-text:         #4D4D4D;
+    --hm-font:         'Open Sans', sans-serif;
+    --hm-br:           4px;       /* border-radius */
+    --hm-container:    1236px;     /* ample exacte del container */
+  }
+  
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ----------------------------------------
+     Fons global gris sota TOT
+     ---------------------------------------- */
+  html {
+    background-color: var(--hm-gray-light);
+  }
+  
+  /* ----------------------------------------
+     Estils genèrics de body (tipografia)
+     ---------------------------------------- */
+  body {
+    font-family: var(--hm-font);
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--hm-text);
+  }
+  
+  /* ----------------------------------------
+     Header i footer full-width sense wrapper
+     ---------------------------------------- */
+  header,
+  footer {
+    width: 100%;
+    background-color: var(--hm-white);
+    /* Aquí pots afegir padding, si el teu header/footer en necessita,
+       però no hi hem d’incloure cap border ni max-width. */
+  }
+  
+  /* ----------------------------------------
+     Wrapper central (igual que Hospital del Mar)
+     ---------------------------------------- */
+  .content-wrapper {
+    background-color: var(--hm-white);
+    max-width: var(--hm-container);
+    margin: 0 auto;
+    padding: 20px;       
+    border: 1px solid var(--hm-border-light);
+    border-radius: var(--hm-br);
+  }
+  
+  /* ----------------------------------------
+     Exemples d’estils interns (opcional)
+     ---------------------------------------- */
+  .sidebar {
+    float: left;
+    width: 30%;
+    /* ... */
+  }
+  
+  .main-content {
+    float: right;
+    width: 80%;
+    /* ... */
+  }
+  
+  /* Evita que els floats desbordin */
+  .content-wrapper::after {
+    content: "";
+    display: block;
+    clear: both;
+  }
+  
