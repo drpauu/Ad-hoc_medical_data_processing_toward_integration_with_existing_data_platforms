@@ -64,49 +64,48 @@ const TestDetails = () => {
   }, [id]);
 
   // Función para descargar el PDF usando jsPDF y el contenido del ref
-  const handleDownloadPdf = () => {
+  const handleDownloadPdf = async () => {
     const doc = new jsPDF({ format: 'a4', unit: 'pt' });
+    const pw = doc.internal.pageSize.getWidth() - 20;  // ancho útil
+    let currentY = 10;                                  // posición Y donde pintar
   
-    // 1) Renderiza sólo las tablas
+    // --- 1) Dibujar gráficos en la página 1 ---
+    if (selectedTables.checkpoint_data) {
+      const canvas1 = await html2canvas(grafic_checkpoints.current, {
+        backgroundColor: null,
+        scale: 2
+      });
+      const img1 = canvas1.toDataURL('image/png');
+      const prop1 = doc.getImageProperties(img1);
+      const ph1   = (prop1.height * pw) / prop1.width;
+      doc.addImage(img1, 'PNG', 10, currentY, pw, ph1);
+      currentY += ph1 + 10;  // separador de 10pt
+    }
+  
+    if (selectedTables.test_data) {
+      const canvas2 = await html2canvas(grafic_data.current, {
+        backgroundColor: null,
+        scale: 2
+      });
+      const img2 = canvas2.toDataURL('image/png');
+      const prop2 = doc.getImageProperties(img2);
+      const ph2   = (prop2.height * pw) / prop2.width;
+      doc.addImage(img2, 'PNG', 10, currentY, pw, ph2);
+      currentY += ph2 + 10;
+    }
+  
+    // --- 2) Ahora pintar las tablas justo debajo ---
     doc.html(contentRef.current, {
-      callback: pdf => {
-        (async () => {
-          const pw = pdf.internal.pageSize.getWidth() - 20;
-  
-          // 2) Captura y añade gráfico checkpoints
-          if (selectedTables.checkpoint_data) {
-            const canvas1 = await html2canvas(grafic_checkpoints.current, {
-              backgroundColor: null, scale: 2
-            });
-            const img1 = canvas1.toDataURL('image/png');
-            const prop1 = pdf.getImageProperties(img1);
-            const ph1   = (prop1.height * pw) / prop1.width;
-            pdf.addPage();
-            pdf.addImage(img1, 'PNG', 10, 10, pw, ph1);
-          }
-  
-          // 3) Captura y añade gráfico SPO2/HR
-          if (selectedTables.test_data) {
-            const canvas2 = await html2canvas(grafic_data.current, {
-              backgroundColor: null, scale: 2
-            });
-            const img2 = canvas2.toDataURL('image/png');
-            const prop2 = pdf.getImageProperties(img2);
-            const ph2   = (prop2.height * pw) / prop2.width;
-            pdf.addPage();
-            pdf.addImage(img2, 'PNG', 10, 10, pw, ph2);
-          }
-  
-          // 4) Guarda
-          pdf.save(`Test_${id}_report.pdf`);
-        })();
+      callback: () => {
+        doc.save(`Test_${id}_report.pdf`);
       },
       x: 10,
-      y: 10,
+      y: currentY,
       width: 550,
       windowWidth: 1000
     });
   };
+  
   
 
   // Función para generar y descargar el archivo Excel usando XLSX
