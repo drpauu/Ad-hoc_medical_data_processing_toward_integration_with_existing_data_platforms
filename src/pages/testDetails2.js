@@ -2,6 +2,7 @@ import React, { useRef, useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 import { useParams } from 'react-router-dom';
 import jsPDF from 'jspdf';
+import html2canvas from 'html2canvas';
 import * as XLSX from 'xlsx';
 import {
   Chart as ChartJS,
@@ -18,7 +19,9 @@ ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, T
 
 const TestDetails = () => {
   // Ref para el contenido que se incluirá en el PDF
-  const contentRef = useRef(null);
+  const contentRef          = useRef(null);    // sólo tablas
+  const grafic_checkpoints  = useRef(null);    // para capturar gráfico checkpoints
+  const grafic_data    = useRef(null);    // para capturar gráfico SPO2/HR
   const { id } = useParams(); // Extraemos el id del test de la URL
   const [test, setTest] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -62,22 +65,49 @@ const TestDetails = () => {
 
   // Función para descargar el PDF usando jsPDF y el contenido del ref
   const handleDownloadPdf = () => {
-    const doc = new jsPDF({
-      format: 'a4',
-      unit: 'pt'
-    });
-
-    // Genera el PDF a partir del contenido HTML referenciado
+    const doc = new jsPDF({ format: 'a4', unit: 'pt' });
+  
+    // 1) Renderiza sólo las tablas
     doc.html(contentRef.current, {
-      callback: (pdf) => {
-        pdf.save(`Test_${id}_report.pdf`);
+      callback: pdf => {
+        (async () => {
+          const pw = pdf.internal.pageSize.getWidth() - 20;
+  
+          // 2) Captura y añade gráfico checkpoints
+          if (selectedTables.checkpoint_data) {
+            const canvas1 = await html2canvas(grafic_checkpoints.current, {
+              backgroundColor: null, scale: 2
+            });
+            const img1 = canvas1.toDataURL('image/png');
+            const prop1 = pdf.getImageProperties(img1);
+            const ph1   = (prop1.height * pw) / prop1.width;
+            pdf.addPage();
+            pdf.addImage(img1, 'PNG', 10, 10, pw, ph1);
+          }
+  
+          // 3) Captura y añade gráfico SPO2/HR
+          if (selectedTables.test_data) {
+            const canvas2 = await html2canvas(grafic_data.current, {
+              backgroundColor: null, scale: 2
+            });
+            const img2 = canvas2.toDataURL('image/png');
+            const prop2 = pdf.getImageProperties(img2);
+            const ph2   = (prop2.height * pw) / prop2.width;
+            pdf.addPage();
+            pdf.addImage(img2, 'PNG', 10, 10, pw, ph2);
+          }
+  
+          // 4) Guarda
+          pdf.save(`Test_${id}_report.pdf`);
+        })();
       },
       x: 10,
       y: 10,
       width: 550,
-      windowWidth: 1000,
+      windowWidth: 1000
     });
   };
+  
 
   // Función para generar y descargar el archivo Excel usando XLSX
   const handleDownloadExcel = () => {
@@ -620,13 +650,13 @@ const checkpointData = {
         </div>
       </div>*/}
       {/* TABLAS (contenido a incluir en el PDF) */}
-      <div ref={contentRef} style={{ marginTop: '30px' }}>
-        {/* ---- Tabla: Gràfic checkpoints ---- */}
-        {selectedTables.checkpoint_data && (
-          <div>
+      {/* FUERA del <div ref={contentRef}> */}
+      {/* ---- Tabla: Gràfic checkpoints ---- */}
+      {selectedTables.checkpoint_data && (
+        <div ref={grafic_checkpoints} style={{ marginBottom: '30px' }}>
           <h3>Test checkpoints</h3>
           <div style={{ height: '300px', width: '100%' }}>
-            <Line
+          <Line
               data={checkpointData}
               options={{ 
                 ...chartOptions, 
@@ -636,12 +666,11 @@ const checkpointData = {
           </div>
         </div>
         )}
-        {/* ---- Tabla: Gràfic SPO2/HR ---- */}
-        {selectedTables.test_data && (
-          <div>
-          <h3>Test data</h3>
-          <div style={{ height: '300px', width: '100%' }}>
-            <Line
+      {selectedTables.test_data && (
+        <div ref={grafic_data} style={{ marginBottom: '30px' }}>
+          <h3>Test data (SPO₂/HR)</h3>
+          <div style={{ height:'300px', width:'100%' }}>
+          <Line
               data={spo2HrData}
               options={{ 
                 ...chartOptions, 
@@ -650,7 +679,10 @@ const checkpointData = {
             />
           </div>
         </div>
-        )}
+      )}
+      {/* — luego tu <div ref={contentRef}> con sólo las tablas… — */}
+
+      <div ref={contentRef} style={{ marginTop: '30px' }}>
         {/* ---- Tabla: TEST ---- */}
         {selectedTables.test && (
           <div className="formatted-table">
