@@ -66,20 +66,23 @@ const TestDetails = () => {
   // Función para descargar el PDF usando jsPDF y el contenido del ref
   const handleDownloadPdf = async () => {
     const doc = new jsPDF({ format: 'a4', unit: 'pt' });
-    const pw = doc.internal.pageSize.getWidth() - 20;  // ancho útil
-    let currentY = 10;                                  // posición Y donde pintar
+    const pageWidth   = doc.internal.pageSize.getWidth();
+    const pageHeight  = doc.internal.pageSize.getHeight();
+    const margin      = 10;
+    const usableWidth = pageWidth - margin * 2;
+    let   cursorY     = margin;
   
-    // --- 1) Dibujar gráficos en la página 1 ---
+    // 1) Dibujar gráficos arriba de la primera página
     if (selectedTables.checkpoint_data) {
       const canvas1 = await html2canvas(grafic_checkpoints.current, {
         backgroundColor: null,
         scale: 2
       });
-      const img1 = canvas1.toDataURL('image/png');
-      const prop1 = doc.getImageProperties(img1);
-      const ph1   = (prop1.height * pw) / prop1.width;
-      doc.addImage(img1, 'PNG', 10, currentY, pw, ph1);
-      currentY += ph1 + 10;  // separador de 10pt
+      const img1    = canvas1.toDataURL('image/png');
+      const props1  = doc.getImageProperties(img1);
+      const h1      = (props1.height * usableWidth) / props1.width;
+      doc.addImage(img1, 'PNG', margin, cursorY, usableWidth, h1);
+      cursorY += h1 + 10;
     }
   
     if (selectedTables.test_data) {
@@ -87,23 +90,56 @@ const TestDetails = () => {
         backgroundColor: null,
         scale: 2
       });
-      const img2 = canvas2.toDataURL('image/png');
-      const prop2 = doc.getImageProperties(img2);
-      const ph2   = (prop2.height * pw) / prop2.width;
-      doc.addImage(img2, 'PNG', 10, currentY, pw, ph2);
-      currentY += ph2 + 10;
+      const img2    = canvas2.toDataURL('image/png');
+      const props2  = doc.getImageProperties(img2);
+      const h2      = (props2.height * usableWidth) / props2.width;
+      doc.addImage(img2, 'PNG', margin, cursorY, usableWidth, h2);
+      cursorY += h2 + 10;
     }
   
-    // --- 2) Ahora pintar las tablas justo debajo ---
-    doc.html(contentRef.current, {
-      callback: () => {
-        doc.save(`Test_${id}_report.pdf`);
-      },
-      x: 10,
-      y: currentY,
-      width: 550,
-      windowWidth: 1000
-    });
+    // 2) Capturar y añadir cada tabla como imagen
+    //    (asegúrate de que cada contenedor de tabla tenga el id correcto,
+    //     p. ej. <div id="test-table">, <div id="antropometric-table">, etc.)
+    const tables = [
+      { key: 'test',           id: 'test-table' },
+      { key: 'antropometric',  id: 'antropometric-table' },
+      { key: 'comments',       id: 'comments-table' },
+      { key: 'basal',          id: 'basal-table' },
+      { key: 'final',          id: 'final-table' },
+      { key: 'rest',           id: 'rest-table' },
+      { key: 'computed1',      id: 'computed1-table' },
+      { key: 'average',        id: 'average-table' },
+      { key: 'periodic',       id: 'periodic-table' },
+      { key: 'checkpoints',    id: 'checkpoints-table' },
+    ];
+  
+    for (const { key, id } of tables) {
+      if (!selectedTables[key]) continue;
+      const el = document.getElementById(id);
+      if (!el) continue;
+  
+      // convertir la tabla en canvas
+      const tableCanvas = await html2canvas(el, {
+        backgroundColor: null,
+        scale: 2
+      });
+      const imgData = tableCanvas.toDataURL('image/png');
+      const props   = doc.getImageProperties(imgData);
+      const imgH    = (props.height * usableWidth) / props.width;
+  
+      // si no cabe en la página actual, arrancar una nueva
+      if (cursorY + imgH > pageHeight - margin) {
+        doc.addPage();
+        cursorY = margin;
+      }
+  
+      // insertar la tabla como imagen
+      doc.addImage(imgData, 'PNG', margin, cursorY, usableWidth, imgH);
+      cursorY += imgH + 10;
+    }
+  
+    // 3) Guardar PDF
+    doc.save(`Test_${id}_report.pdf`);
   };
   
   
@@ -620,36 +656,6 @@ const checkpointData = {
           </label>
         </div>
       </div>
-
-      {/* GRAFICOS (fuera del ref => no salen en el PDF) 
-      <div>
-        <div>
-          <h3>Test checkpoints</h3>
-          <div style={{ height: '300px', width: '100%' }}>
-            <Line
-              data={checkpointData}
-              options={{ 
-                ...chartOptions, 
-                maintainAspectRatio: false 
-              }}
-            />
-          </div>
-        </div>
-        <div>
-          <h3>Test data</h3>
-          <div style={{ height: '300px', width: '100%' }}>
-            <Line
-              data={spo2HrData}
-              options={{ 
-                ...chartOptions, 
-                maintainAspectRatio: false 
-              }}
-            />
-          </div>
-        </div>
-      </div>*/}
-      {/* TABLAS (contenido a incluir en el PDF) */}
-      {/* FUERA del <div ref={contentRef}> */}
       {/* ---- Tabla: Gràfic checkpoints ---- */}
       {selectedTables.checkpoint_data && (
         <div ref={grafic_checkpoints} style={{ marginBottom: '30px' }}>
@@ -684,7 +690,7 @@ const checkpointData = {
       <div ref={contentRef} style={{ marginTop: '30px' }}>
         {/* ---- Tabla: TEST ---- */}
         {selectedTables.test && (
-          <div className="formatted-table">
+          <div id="test-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -713,7 +719,7 @@ const checkpointData = {
 
         {/* ---- Tabla: ANTROPOMETRIC ---- */}
         {selectedTables.antropometric && (
-          <div className="formatted-table">
+          <div id="antropometric-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -742,7 +748,7 @@ const checkpointData = {
 
         {/* ---- Tabla: COMMENTS ---- */}
         {selectedTables.comments && (
-          <div className="formatted-table">
+          <div id="comments-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -762,7 +768,7 @@ const checkpointData = {
 
         {/* ---- Tabla: BASAL ---- */}
         {selectedTables.basal && (
-          <div className="formatted-table">
+          <div id="basal-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -793,7 +799,7 @@ const checkpointData = {
 
         {/* ---- Tabla: FINAL ---- */}
         {selectedTables.final && (
-          <div className="formatted-table">
+          <div id="final-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -818,7 +824,7 @@ const checkpointData = {
 
         {/* ---- Tabla: REST ---- */}
         {selectedTables.rest && (
-          <div className="formatted-table">
+          <div id="rest-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -849,7 +855,7 @@ const checkpointData = {
 
         {/* ---- Tabla: COMPUTED ---- */}
         {selectedTables.computed1 && (
-          <div className="formatted-table">
+          <div id="computed1-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -977,7 +983,7 @@ const checkpointData = {
 
         {/* ---- Tabla: AVERAGE ---- */}
         {selectedTables.average && (
-          <div className="formatted-table">
+          <div id="average-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -1048,7 +1054,7 @@ const checkpointData = {
 
         {/* ---- Tabla: PERIODIC ---- */}
         {selectedTables.periodic && (
-          <div className="formatted-table">
+          <div id="periodic-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
@@ -1117,7 +1123,7 @@ const checkpointData = {
 
         {/* ---- Tabla: CHECKPOINTS ---- */}
         {selectedTables.checkpoints && (
-          <div className="formatted-table">
+          <div id="checkpoints-table" className="formatted-table">
             <table>
               <thead>
                 <tr>
