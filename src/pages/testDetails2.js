@@ -26,6 +26,8 @@ const TestDetails = () => {
 
   // Estado para la selección de tablas
   const [selectedTables, setSelectedTables] = useState({
+    checkpoint_data: true,
+    test_data: true,
     test: true,
     antropometric: true,
     comments: true,
@@ -530,6 +532,16 @@ const checkpointData = {
         <h2>Selecciona las tablas a mostrar y descargar:</h2>
         <div>
           <label>
+            <input type="checkbox" checked={selectedTables.checkpoint_data} onChange={() => handleTableSelection('checkpoint_data')} /> Gràfic checkpoints
+          </label>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" checked={selectedTables.test_data} onChange={() => handleTableSelection('test_data')} /> Gràfic SPO2/HR
+          </label>
+        </div>
+        <div>
+          <label>
             <input type="checkbox" checked={selectedTables.test} onChange={() => handleTableSelection('test')} /> Test
           </label>
         </div>
@@ -580,21 +592,65 @@ const checkpointData = {
         </div>
       </div>
 
-      {/* GRAFICOS (fuera del ref => no salen en el PDF) */}
+      {/* GRAFICOS (fuera del ref => no salen en el PDF) 
       <div>
-        <h2>6MWT data:</h2>
         <div>
           <h3>Test checkpoints</h3>
-          <Line data={checkpointData} options={chartOptions} />
+          <div style={{ height: '300px', width: '100%' }}>
+            <Line
+              data={checkpointData}
+              options={{ 
+                ...chartOptions, 
+                maintainAspectRatio: false 
+              }}
+            />
+          </div>
         </div>
         <div>
           <h3>Test data</h3>
-          <Line data={spo2HrData} options={chartOptions} />
+          <div style={{ height: '300px', width: '100%' }}>
+            <Line
+              data={spo2HrData}
+              options={{ 
+                ...chartOptions, 
+                maintainAspectRatio: false 
+              }}
+            />
+          </div>
         </div>
-      </div>
-
+      </div>*/}
       {/* TABLAS (contenido a incluir en el PDF) */}
       <div ref={contentRef} style={{ marginTop: '30px' }}>
+        {/* ---- Tabla: Gràfic checkpoints ---- */}
+        {selectedTables.checkpoint_data && (
+          <div>
+          <h3>Test checkpoints</h3>
+          <div style={{ height: '300px', width: '100%' }}>
+            <Line
+              data={checkpointData}
+              options={{ 
+                ...chartOptions, 
+                maintainAspectRatio: false 
+              }}
+            />
+          </div>
+        </div>
+        )}
+        {/* ---- Tabla: Gràfic SPO2/HR ---- */}
+        {selectedTables.test_data && (
+          <div>
+          <h3>Test data</h3>
+          <div style={{ height: '300px', width: '100%' }}>
+            <Line
+              data={spo2HrData}
+              options={{ 
+                ...chartOptions, 
+                maintainAspectRatio: false 
+              }}
+            />
+          </div>
+        </div>
+        )}
         {/* ---- Tabla: TEST ---- */}
         {selectedTables.test && (
           <div className="formatted-table">
