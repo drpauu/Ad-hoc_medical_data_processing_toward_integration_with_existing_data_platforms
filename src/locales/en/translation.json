@@ -45,7 +45,9 @@
   "charts": {
     "sectionTitle": "6MWT data:",
     "checkpoints": "Test checkpoints",
-    "testData": "Test data"
+    "testData": "Test data",
+    "checkpointsInfo": "This chart represents SpO₂ and heart rate at each checkpoint during the 6MWT.",
+    "testDataInfo": "This chart displays all SpO₂ and heart rate data collected throughout the 6MWT, with color shading to indicate different stages of the test."
   },
   "tableTitles": {
     "test": "Test",

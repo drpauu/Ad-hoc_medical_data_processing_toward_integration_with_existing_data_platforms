@@ -1,0 +1,104 @@
+/* ---------- src/styles/checkbox-list.css ---------- */
+
+/* Contenedor principal de toda la lista de checkboxes */
+.checkbox-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+  
+  /* Cada elemento de la lista */
+  .checkbox-item {
+    display: flex;
+    align-items: center;
+    background-color: #e1eaf5;     /* Azul muy claro */
+    border-bottom: 1px solid #ffffff;
+    padding: 10px 16px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    width: 30%;
+    margin: 0 ;
+  }
+  
+  /* Quitar borde en el último elemento */
+  .checkbox-item:last-child {
+    border-bottom: none;
+  }
+  
+  /* Cuando el ratón pasa por encima del item */
+  .checkbox-item:hover {
+    background-color: #d1daf0;    /* Azul un poco más oscuro */
+  }
+  
+  /* Checkbox oculto (usamos un span personalizado para simular) */
+  .checkbox-item input[type="checkbox"] {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    position: absolute;
+  }
+  
+  /* Estilo del “checkmark” personalizado */
+  .checkbox-item .custom-checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #005da4;      /* Borde azul oscuro */
+    border-radius: 4px;
+    margin-right: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #ffffff;
+    flex-shrink: 0;
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+  }
+  
+  /* El tick dentro del cuadro (oculto por defecto) */
+  .checkbox-item .custom-checkbox::after {
+    content: '';
+    display: none;
+    width: 6px;
+    height: 10px;
+    border: solid #ffffff;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+  }
+  
+  /* Cuando el input está checked, colorear el custom-checkbox y mostrar el tick */
+  .checkbox-item input[type="checkbox"]:checked + .custom-checkbox {
+    background-color: #005da4;    /* Azul fuerte */
+    border-color: #005da4;
+  }
+  
+  .checkbox-item input[type="checkbox"]:checked + .custom-checkbox::after {
+    display: block;
+  }
+  
+  /* Estilo del texto que acompaña al checkbox */
+  .checkbox-item .checkbox-label {
+    font-size: 16px;             /* Tamaño de fuente un poco mayor */
+    color: #005da4;              /* Azul oscuro */
+    transition: color 0.2s ease;
+  }
+  
+  /* Cuando el checkbox está checked, texto en negrita y color blanco */
+  .checkbox-item input[type="checkbox"]:checked ~ .checkbox-label {
+    color: #005da4;
+    font-weight: 500;
+  }
+  
+  /* Si quieres que el texto cambie de color al pasar hover sobre el item */
+  .checkbox-item:hover .checkbox-label {
+    color: #005da4;
+  }
+  
+  /* Si el usuario hace click sobre cualquier parte del item, se activa el input */
+  .checkbox-item label {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    margin: 0;
+    cursor: pointer;
+  }
+  

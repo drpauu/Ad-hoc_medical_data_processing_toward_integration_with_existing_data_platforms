@@ -45,7 +45,9 @@
   "charts": {
     "sectionTitle": "Datos 6MWT:",
     "checkpoints": "Puntos de Control de Prueba",
-    "testData": "Datos de Prueba"
+    "testData": "Datos de Prueba",
+    "checkpointsInfo": "Este gráfico representa el SPO₂ y la frecuencia cardíaca según el paso de cada punto de control durante la prueba de 6MWT.",
+    "testDataInfo": "Este gráfico muestra todos los datos de SPO₂ y frecuencia cardíaca obtenidos a lo largo de la prueba de 6MWT, diferenciando el tono de color según la fase del test."
   },
   "tableTitles": {
     "test": "Test",

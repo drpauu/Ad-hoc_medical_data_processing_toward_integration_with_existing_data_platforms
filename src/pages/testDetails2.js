@@ -6,6 +6,7 @@ import jsPDF from 'jspdf';
 import autoTable from 'jspdf-autotable';
 import html2canvas from 'html2canvas';
 import { useTranslation } from 'react-i18next';
+import '../styles/checkbox-list.css'; 
 
 import {
   Chart as ChartJS,
@@ -27,6 +28,65 @@ ChartJS.register(
   Tooltip,
   Legend
 );
+
+const InfoTooltip = ({ text }) => {
+  const [visible, setVisible] = useState(false);
+
+  return (
+    <div
+      style={{
+        position: 'relative',
+        display: 'inline-block',
+        marginLeft: '8px',      // separa un poco del título
+        verticalAlign: 'middle' // alinea con el texto adyacente
+      }}
+      onMouseEnter={() => setVisible(true)}
+      onMouseLeave={() => setVisible(false)}
+    >
+      {/* Círculo con “ℹ” */}
+      <div
+        style={{
+          borderRadius: '50%',
+          border: '1px solid #555',
+          width: '16px',
+          height: '16px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          fontSize: '12px',
+          color: '#555',
+          cursor: 'pointer',
+          userSelect: 'none'
+        }}
+      >
+        ℹ
+      </div>
+
+      {/* Tooltip: solo se renderiza si `visible === true` */}
+      {visible && (
+        <div
+          style={{
+            position: 'absolute',
+            top: '100%',                     // justo debajo del icono
+            left: '50%',
+            transform: 'translateX(-50%)',  // centrar horizontalmente
+            backgroundColor: '#333',
+            color: '#fff',
+            padding: '8px',
+            borderRadius: '4px',
+            whiteSpace: 'normal',
+            zIndex: 1000,
+            width: '200px',
+            fontSize: '12px',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.3)'
+          }}
+        >
+          {text}
+        </div>
+      )}
+    </div>
+  );
+};
 
 const TestDetails = () => {
   const { t } = useTranslation();
@@ -913,30 +973,56 @@ const TestDetails = () => {
   if (error) return <div>{t('testDetails.error', { message: error.message })}</div>;
   if (!test) return <div>{t('testDetails.noData')}</div>;
 
-  // Prepare chart data
+  // Preparar datos de la prueba
   const testData = test.data || [];
   const spoData = testData.map(item => ({ x: item.t, y: item.s }));
-  const hrData = testData.map(item => ({ x: item.t, y: item.h }));
+  const hrData  = testData.map(item => ({ x: item.t, y: item.h }));
+
   const checkpointTimes = test.pascon.map(item => item.t);
-  const checkpointSpo = test.pascon.map(item => item.s);
-  const checkpointHr = test.pascon.map(item => item.h);
+  const checkpointSpo   = test.pascon.map(item => item.s);
+  const checkpointHr    = test.pascon.map(item => item.h);
 
+  // ─── 1. Preparar arrays de valores X ──────────────────────────────────────────
   const spoXValues = spoData.map(d => d.x);
-  const hrXValues = hrData.map(d => d.x);
-  const spo2HrXMin = (spoXValues.length || hrXValues.length) ? Math.min(...spoXValues, ...hrXValues) : 0;
-  const spo2HrXMax = (spoXValues.length || hrXValues.length) ? Math.max(...spoXValues, ...hrXValues) : 10;
+  const hrXValues  = hrData.map(d => d.x);
+  const cpXValues  = checkpointTimes.slice();
 
+  // ─── 2. Combinar todos los valores en un solo array ────────────────────────────
+  const allXValues = [
+    ...spoXValues,
+    ...hrXValues,
+    ...cpXValues
+  ];
+
+  // ─── 3. Obtener Xmin y Xmax globales ────────────────────────────────────────────
+  const globalXMin = allXValues.length > 0
+    ? Math.min(...allXValues)
+    : 0;
+  const globalXMax = allXValues.length > 0
+    ? Math.max(...allXValues)
+    : 10;
+
+  // ─── 4. Obtener Xmin y Xmax solo de checkpoints (para determinar cuándo la prueba está en marcha) ─
+  const cpXMin = checkpointTimes.length > 0
+    ? Math.min(...checkpointTimes)
+    : globalXMin;
+  const cpXMax = checkpointTimes.length > 0
+    ? Math.max(...checkpointTimes)
+    : globalXMax;
+
+  // Opciones para gráfico SPO₂/HR con rango X unificado y segmentación por opacidad
   const spo2HrOptions = {
     scales: {
       x: {
         type: 'linear',
         title: { display: true, text: `${t('units.time')} (s)` },
-        min: spo2HrXMin,
-        max: spo2HrXMax,
+        min: globalXMin,
+        max: globalXMax,
+        ticks: { stepSize: 1 }
       },
       y: {
         title: { display: true, text: t('units.value') },
-        ticks: { stepSize: 1 },
+        ticks: { stepSize: 1 }
       }
     },
     hover: { mode: 'nearest', intersect: true },
@@ -956,20 +1042,19 @@ const TestDetails = () => {
     }
   };
 
-  const cpXMin = checkpointTimes.length ? Math.min(...checkpointTimes) : 0;
-  const cpXMax = checkpointTimes.length ? Math.max(...checkpointTimes) : 10;
-
+  // Opciones para gráfico de checkpoints con mismo rango X
   const chartOptions = {
     scales: {
       x: {
         type: 'linear',
         title: { display: true, text: `${t('units.time')} (s)` },
-        min: cpXMin,
-        max: cpXMax,
+        min: globalXMin,
+        max: globalXMax,
+        ticks: { stepSize: 1 }
       },
       y: {
         title: { display: true, text: t('units.value') },
-        ticks: { stepSize: 1 },
+        ticks: { stepSize: 1 }
       }
     },
     hover: { mode: 'nearest', intersect: true },
@@ -989,32 +1074,48 @@ const TestDetails = () => {
     }
   };
 
+  // Datos para la gráfica SPO₂/HR con opacidad variable según si el tiempo está entre cpXMin y cpXMax
   const spo2HrData = {
-    labels: spoData.map(d => d.x),
     datasets: [
       {
         label: 'SPO₂',
-        data: spoData.map(d => d.y),
-        borderColor: 'rgba(75,192,192,1)',
-        fill: false,
-        tension: 0.1,
+        data: spoData,
+        // El color del borde se decidirá por cada segmento
+        segment: {
+          borderColor: ctx => {
+            const x0 = ctx.p0.parsed.x;
+            const x1 = ctx.p1.parsed.x;
+            // Si el segmento está dentro de [cpXMin, cpXMax], opacidad 1; si no, 0.5
+            return (x0 >= cpXMin && x1 <= cpXMax)
+              ? 'rgba(75,192,192,1)'
+              : 'rgba(75,192,192,0.5)';
+          }
+        },
+        // Punto de hover siempre con opacidad 1 para visibilidad
         pointRadius: 0,
         hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)',
+        pointHoverBackgroundColor: 'rgba(75,192,192,1)'
       },
       {
         label: 'HR',
-        data: hrData.map(d => d.y),
-        borderColor: 'rgba(255,99,132,1)',
-        fill: false,
-        tension: 0.1,
+        data: hrData,
+        segment: {
+          borderColor: ctx => {
+            const x0 = ctx.p0.parsed.x;
+            const x1 = ctx.p1.parsed.x;
+            return (x0 >= cpXMin && x1 <= cpXMax)
+              ? 'rgba(255,99,132,1)'
+              : 'rgba(255,99,132,0.5)';
+          }
+        },
         pointRadius: 0,
         hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(255,99,132,1)',
+        pointHoverBackgroundColor: 'rgba(255,99,132,1)'
       }
     ]
   };
 
+  // Datos para la gráfica de checkpoints
   const checkpointData = {
     labels: checkpointTimes,
     datasets: [
@@ -1024,7 +1125,7 @@ const TestDetails = () => {
         borderColor: 'blue',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
         fill: false,
-        pointRadius: 5,
+        pointRadius: 5
       },
       {
         label: t('charts.testData'),
@@ -1032,10 +1133,11 @@ const TestDetails = () => {
         borderColor: 'red',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
         fill: false,
-        pointRadius: 5,
-      },
-    ],
+        pointRadius: 5
+      }
+    ]
   };
+
 
   return (
     <div style={{ position: 'relative' }}>
@@ -1089,131 +1191,46 @@ const TestDetails = () => {
 
       <div style={{ marginTop: '80px', marginBottom: '20px' }}>
         <h2>{t('selectTables.header')}</h2>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.checkpoint_data}
-              onChange={() => handleTableSelection('checkpoint_data')}
-            />{' '}
-            {t('charts.checkpoints')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.test_data}
-              onChange={() => handleTableSelection('test_data')}
-            />{' '}
-            {t('charts.testData')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.test}
-              onChange={() => handleTableSelection('test')}
-            />{' '}
-            {t('selectTables.test')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.antropometric}
-              onChange={() => handleTableSelection('antropometric')}
-            />{' '}
-            {t('selectTables.antropometricValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.comments}
-              onChange={() => handleTableSelection('comments')}
-            />{' '}
-            {t('selectTables.comments')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.basal}
-              onChange={() => handleTableSelection('basal')}
-            />{' '}
-            {t('selectTables.basalValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.final}
-              onChange={() => handleTableSelection('final')}
-            />{' '}
-            {t('selectTables.finalValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.rest}
-              onChange={() => handleTableSelection('rest')}
-            />{' '}
-            {t('selectTables.restValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.computed1}
-              onChange={() => handleTableSelection('computed1')}
-            />{' '}
-            {t('selectTables.computedValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.average}
-              onChange={() => handleTableSelection('average')}
-            />{' '}
-            {t('selectTables.averageValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.periodic}
-              onChange={() => handleTableSelection('periodic')}
-            />{' '}
-            {t('selectTables.periodicValues')}
-          </label>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={selectedTables.checkpoints}
-              onChange={() => handleTableSelection('checkpoints')}
-            />{' '}
-            {t('selectTables.checkpoints')}
-          </label>
-        </div>
+        <ul className="checkbox-list">
+          {[
+            { key: 'checkpoint_data', label: t('charts.checkpoints') },
+            { key: 'test_data',       label: t('charts.testData') },
+            { key: 'test',            label: t('selectTables.test') },
+            { key: 'antropometric',   label: t('selectTables.antropometricValues') },
+            { key: 'comments',        label: t('selectTables.comments') },
+            { key: 'basal',           label: t('selectTables.basalValues') },
+            { key: 'final',           label: t('selectTables.finalValues') },
+            { key: 'rest',            label: t('selectTables.restValues') },
+            { key: 'computed1',       label: t('selectTables.computedValues') },
+            { key: 'average',         label: t('selectTables.averageValues') },
+            { key: 'periodic',        label: t('selectTables.periodicValues') },
+            { key: 'checkpoints',     label: t('selectTables.checkpoints') }
+          ].map(item => (
+            <li key={item.key} className="checkbox-item">
+              <label>
+                <input
+                  type="checkbox"
+                  checked={selectedTables[item.key]}
+                  onChange={() => handleTableSelection(item.key)}
+                />
+                <span className="custom-checkbox" />
+                <span className="checkbox-label">{item.label}</span>
+              </label>
+            </li>
+          ))}
+        </ul>
       </div>
 
+
+      {/* ——————————————————————————————————————————————————————————————— */}
+      {/* GRÁFICA DE PUNTOS DE CONTROL (checkpoints) */}
       {selectedTables.checkpoint_data && (
-        <div ref={grafic_checkpoints} style={{ marginBottom: '30px' }}>
-          <h3>{t('charts.checkpoints')}</h3>
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center'}}>
+            {t('charts.checkpoints')}
+            {/* Insertamos aquí nuestro InfoTooltip */}
+            <InfoTooltip text={t('charts.checkpointsInfo')} />
+          </h2>
           <div style={{ height: '300px', width: '100%' }}>
             <Line
               data={checkpointData}
@@ -1226,9 +1243,15 @@ const TestDetails = () => {
         </div>
       )}
 
+      {/* ——————————————————————————————————————————————————————————————— */}
+      {/* GRÁFICA DE DATOS DEL TEST (SPO₂/HR) */}
       {selectedTables.test_data && (
-        <div ref={grafic_data} style={{ marginBottom: '30px' }}>
-          <h3>{t('charts.testData')} (SPO₂/HR)</h3>
+        <div style={{ marginBottom: '30px' }}>
+          <h2 style={{ display: 'flex', alignItems: 'center'}}>
+            {t('charts.testData')} (SPO₂/HR)
+            {/* InfoTooltip para la segunda gráfica */}
+            <InfoTooltip text={t('charts.testDataInfo')} />
+          </h2>
           <div style={{ height: '300px', width: '100%' }}>
             <Line
               data={spo2HrData}
@@ -1240,6 +1263,7 @@ const TestDetails = () => {
           </div>
         </div>
       )}
+
 
       <div ref={contentRef} style={{ marginTop: '30px' }}>
         {selectedTables.test && (

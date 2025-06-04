@@ -1,0 +1,85 @@
+/* ---------- src/styles/hmd-menu.css ---------- */
+
+/* Contenedor principal de la lista */
+.hmd-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  background-color: #e1eaf5; /* Azul muy claro */
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+/* Cada elemento de la lista */
+.hmd-menu-item {
+  border-bottom: 1px solid #ffffff; /* Línea blanca separadora */
+  background-color: #e1eaf5;        /* Mismo azul muy claro */
+  transition: background-color 0.2s ease;
+}
+
+/* Quitar borde inferior en el último elemento */
+.hmd-menu-item:last-child {
+  border-bottom: none;
+}
+
+/* Estilo del enlace interno */
+.hmd-menu-item a {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  color: #005da4;         /* Azul oscuro para el texto */
+  font-size: 16px;        /* Aumentado de 14px a 16px */
+  padding: 12px 16px;
+  position: relative;
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Icono circular a la izquierda (pseudo-elemento) */
+.hmd-menu-item a::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background-color: #005da4; /* Azul oscuro */
+  border-radius: 50%;
+  margin-right: 10px;
+  flex-shrink: 0;
+}
+
+/* Hover de todo el <li> (fondo ligeramente más oscuro) */
+.hmd-menu-item:hover {
+  background-color: #d1daf0;
+}
+
+/* El texto en el enlace no cambia de color al hacer hover sobre el <li> */
+.hmd-menu-item:hover a {
+  color: #005da4;
+}
+
+/* Estado “activo” o “seleccionado” */
+.hmd-menu-item.selected {
+  background-color: #005da4; /* Azul fuerte */
+}
+
+/* Enlace dentro de ítem seleccionado */
+.hmd-menu-item.selected a {
+  color: #ffffff;            /* Texto blanco */
+  font-weight: 500;
+}
+
+/* Círculo (pseudo-elemento) dentro de elemento seleccionado */
+.hmd-menu-item.selected a::before {
+  background-color: #ffffff; /* Círculo blanco */
+}
+
+/* Hover cuando ya está seleccionado (opcionalmente más oscuro) */
+.hmd-menu-item.selected:hover {
+  background-color: #004b8a; /* Azul más oscuro */
+}
+
+/* Cursor pointer en el texto del enlace */
+.hmd-menu-item a:hover {
+  cursor: pointer;
+}

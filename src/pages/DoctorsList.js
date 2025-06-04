@@ -1,45 +1,53 @@
-// src/components/DoctorsList.js
+// src/pages/DoctorsList.js
+
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import '../styles/hmd-menu.css'; // Importar los estilos del menú
 
 const DoctorsList = () => {
   const { t } = useTranslation();
+  const location = useLocation();
   const [doctors, setDoctors] = useState([]);
 
   useEffect(() => {
     fetch("http://localhost:5000/api/tests")
       .then((res) => {
-        if (!res.ok) throw new Error(`Error fetching tests: ${res.status}`);
+        if (!res.ok) {
+          throw new Error(`Error fetching tests: ${res.status}`);
+        }
         return res.json();
       })
       .then((data) => {
-        const testsArray = Array.isArray(data) ? data : data.tests || [];
-        const uniqueDoctors = [
-          ...new Set(
-            testsArray.map((entry) => entry.test?.did).filter(Boolean)
-          ),
-        ];
-        setDoctors(uniqueDoctors);
+        const allTests = Array.isArray(data) ? data : [];
+        const ids = allTests.map(t => t.test.did);
+        const uniqueIds = [...new Set(ids)];
+        setDoctors(uniqueIds);
       })
-      .catch((err) => {
-        console.error("Error al obtener tests:", err);
-        setDoctors([]);
+      .catch((error) => {
+        console.error("Error al obtener tests:", error);
       });
   }, []);
 
   return (
     <div>
-      <h1>{t("doctorsList.title")}</h1>
+      <h2>{t("doctorsList.title")}</h2>
 
       {doctors.length > 0 ? (
-        <ul>
-          {doctors.map((did, idx) => (
-            <li key={idx}>
-              {/* Cuando se hace clic, vamos a /doctors/:did */}
-              <Link to={`/doctors/${did}`}>{did}</Link>
-            </li>
-          ))}
+        <ul className="hmd-menu">
+          {doctors.map(did => {
+            const href = `/doctors/${did}`;
+            const isActive = location.pathname === href;
+
+            return (
+              <li
+                key={did}
+                className={`hmd-menu-item${isActive ? ' selected' : ''}`}
+              >
+                <Link to={href}>{did}</Link>
+              </li>
+            );
+          })}
         </ul>
       ) : (
         <p>{t("doctorsList.noDoctors")}</p>
