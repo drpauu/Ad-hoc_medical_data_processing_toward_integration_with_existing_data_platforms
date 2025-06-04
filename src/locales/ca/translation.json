@@ -1,0 +1,145 @@
+{
+  "home": {
+    "title": "Visualitzador de dades 6MWT",
+    "subtitle": "Selecciona una opció per veure més detalls:",
+    "testsLink": "Proves",
+    "doctorsLink": "Metges"
+  },
+  "testList": {
+    "title": "Llista de Proves"
+  },
+  "doctorsList": {
+    "title": "Llista de Metges",
+    "noDoctors": "No hi ha metges disponibles."
+  },
+  "doctorTests": {
+    "title": "Proves del Metge {{did}}",
+    "noTests": "Aquest metge encara no ha realitzat cap prova."
+  },
+  "editPage": {
+    "labelDate": "Data:",
+    "buttonSave": "Desa canvis"
+  },
+  "testDetails": {
+    "loading": "Carregant dades...",
+    "error": "Error: {{message}}",
+    "noData": "No hi ha dades de la prova disponibles."
+  },
+  "buttons": {
+    "downloadPdf": "Descarregar PDF",
+    "downloadExcel": "Descarregar Excel"
+  },
+  "selectTables": {
+    "header": "Selecciona les taules per mostrar i descarregar:",
+    "test": "Prova",
+    "antropometricValues": "Valors Antropomètrics",
+    "comments": "Comentaris",
+    "basalValues": "Valors Basals",
+    "finalValues": "Valors Finals",
+    "restValues": "Valors de Repòs",
+    "computedValues": "Valors Calculats",
+    "averageValues": "Valors Mitjans",
+    "periodicValues": "Valors Periòdics",
+    "checkpoints": "Punts de Control"
+  },
+  "charts": {
+    "sectionTitle": "Dades 6MWT:",
+    "checkpoints": "Punts de Control de Prova",
+    "testData": "Dades de Prova"
+  },
+  "tableTitles": {
+    "test": "Prova",
+    "antropometricValues": "Valors Antropomètrics",
+    "comments": "Comentaris",
+    "basalValues": "Valors Basals",
+    "finalValues": "Valors Finals",
+    "restValues": "Valors de Repòs",
+    "computedValues": "Valors Calculats",
+    "averageValues": "Valors Mitjans",
+    "periodicValues": "Valors Periòdics",
+    "checkpoints": "Punts de Control"
+  },
+  "tableHeaders": {
+    "test": {
+      "date": "Data",
+      "time": "Hora",
+      "coneDistance": "Distància Cones",
+      "id": "ID",
+      "hash": "Hash"
+    },
+    "antropometric": {
+      "name": "Nom",
+      "gender": "Gènere",
+      "age": "Edat",
+      "weightHeight": "Pes – Alçada",
+      "imc": "IMC"
+    },
+    "basal": {
+      "saturation": "Saturació (SpO₂)",
+      "heartRate": "Freqüència Cardíaca (FC)",
+      "hrPercentage": "% FC",
+      "dyspnea": "Dispnea (D)",
+      "fatigue": "Fatiga (F)",
+      "o2": "O₂"
+    },
+    "final": {
+      "meters": "Metres",
+      "dyspnea": "Dispnea (D)",
+      "fatigue": "Fatiga (F)"
+    },
+    "rest": {
+      "halfRestSpo": "SpO₂ Mitja Repòs",
+      "halfRestHr": "FC Mitja Repòs",
+      "halfRestHrPercentage": "% FC Mitja Repòs",
+      "restEndSpo": "SpO₂ Final Repòs",
+      "restEndHr": "FC Final Repòs",
+      "restEndHrPercentage": "% FC Final Repòs"
+    },
+    "computed": {
+      "enrightD": "Enright D",
+      "enrightPercent": "Enright %",
+      "sixMWWork": "Treball 6MW",
+      "dsp": "DSP",
+      "maxTestHr": "FC Màx Prova",
+      "maxTestHrPercent": "% FC Màx Prova",
+      "stops": "Pausas",
+      "stopsTime": "Temps Pauses",
+      "avgSpo2": "SpO₂ Mitjà",
+      "avgHr": "FC Mitjana",
+      "minTestSpo2": "SpO₂ Mínima Prova",
+      "sixMwSpeed": "Vel. 6MW"
+    },
+    "average": {
+      "avgFirstMin": "Mitja 1a min",
+      "avgSecondMin": "Mitja 2a min",
+      "avgThirdMin": "Mitja 3a min",
+      "avgFourthMin": "Mitja 4a min",
+      "avgFifthMin": "Mitja 5a min",
+      "avgSixthMin": "Mitja 6a min"
+    },
+    "periodic": {
+      "min1": "Min 1",
+      "min2": "Min 2",
+      "min3": "Min 3",
+      "min4": "Min 4",
+      "min5": "Min 5",
+      "min6": "Min 6"
+    },
+    "checkpoints": {
+      "meters": "Metres",
+      "time": "Temps",
+      "heartRate": "Freqüència Cardíaca",
+      "saturation": "Saturació"
+    }
+  },
+  "defaults": {
+    "noData": "Sense dades"
+  },
+  "units": {
+    "mts": "mts",
+    "ppm": "ppm",
+    "percent": "%",
+    "borg": "Borg",
+    "liters": "L"
+  }
+}

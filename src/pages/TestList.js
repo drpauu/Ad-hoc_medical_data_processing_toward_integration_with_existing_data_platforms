@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const TestList = () => {
+  const { t } = useTranslation();
   const [tests, setTests] = useState([]);
 
   useEffect(() => {
@@ -13,11 +15,10 @@ const TestList = () => {
 
   return (
     <div>
-      <h2>Lista de Tests</h2>
+      <h2>{t('testList.title')}</h2>
       <ul>
         {tests.map(test => (
           <li key={test._id}>
-            {/* Puedes mostrar algún identificador o campo descriptivo del test */}
             <Link to={`/test/${test._id}`}>{test.test.pid}</Link>
           </li>
         ))}

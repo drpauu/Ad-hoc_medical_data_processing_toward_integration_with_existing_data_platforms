@@ -1,0 +1,145 @@
+{
+  "home": {
+    "title": "Visor de datos 6MWT",
+    "subtitle": "Selecciona una opción para ver más detalles:",
+    "testsLink": "Tests",
+    "doctorsLink": "Doctores"
+  },
+  "testList": {
+    "title": "Lista de Tests"
+  },
+  "doctorsList": {
+    "title": "Lista de Doctores",
+    "noDoctors": "No hay doctores disponibles."
+  },
+  "doctorTests": {
+    "title": "Tests del Doctor {{did}}",
+    "noTests": "Este doctor aún no ha realizado ningún test."
+  },
+  "editPage": {
+    "labelDate": "Fecha:",
+    "buttonSave": "Guardar Cambios"
+  },
+  "testDetails": {
+    "loading": "Cargando datos...",
+    "error": "Error: {{message}}",
+    "noData": "No hay datos del test disponibles."
+  },
+  "buttons": {
+    "downloadPdf": "Descargar PDF",
+    "downloadExcel": "Descargar Excel"
+  },
+  "selectTables": {
+    "header": "Selecciona las tablas para mostrar y descargar:",
+    "test": "Test",
+    "antropometricValues": "Valores Antropométricos",
+    "comments": "Comentarios",
+    "basalValues": "Valores Basales",
+    "finalValues": "Valores Finales",
+    "restValues": "Valores de Reposo",
+    "computedValues": "Valores Computados",
+    "averageValues": "Valores Promedio",
+    "periodicValues": "Valores Periódicos",
+    "checkpoints": "Puntos de Control"
+  },
+  "charts": {
+    "sectionTitle": "Datos 6MWT:",
+    "checkpoints": "Puntos de Control de Prueba",
+    "testData": "Datos de Prueba"
+  },
+  "tableTitles": {
+    "test": "Test",
+    "antropometricValues": "Valores Antropométricos",
+    "comments": "Comentarios",
+    "basalValues": "Valores Basales",
+    "finalValues": "Valores Finales",
+    "restValues": "Valores de Reposo",
+    "computedValues": "Valores Computados",
+    "averageValues": "Valores Promedio",
+    "periodicValues": "Valores Periódicos",
+    "checkpoints": "Puntos de Control"
+  },
+  "tableHeaders": {
+    "test": {
+      "date": "Fecha",
+      "time": "Hora",
+      "coneDistance": "Distancia Conos",
+      "id": "ID",
+      "hash": "Hash"
+    },
+    "antropometric": {
+      "name": "Nombre",
+      "gender": "Género",
+      "age": "Edad",
+      "weightHeight": "Peso – Altura",
+      "imc": "IMC"
+    },
+    "basal": {
+      "saturation": "Saturación (SpO₂)",
+      "heartRate": "Frecuencia Cardíaca (FC)",
+      "hrPercentage": "% FC",
+      "dyspnea": "Disnea (D)",
+      "fatigue": "Fatiga (F)",
+      "o2": "O₂"
+    },
+    "final": {
+      "meters": "Metros",
+      "dyspnea": "Disnea (D)",
+      "fatigue": "Fatiga (F)"
+    },
+    "rest": {
+      "halfRestSpo": "SpO₂ Medio Reposo",
+      "halfRestHr": "FC Medio Reposo",
+      "halfRestHrPercentage": "% FC Medio Reposo",
+      "restEndSpo": "SpO₂ Final Reposo",
+      "restEndHr": "FC Final Reposo",
+      "restEndHrPercentage": "% FC Final Reposo"
+    },
+    "computed": {
+      "enrightD": "Enright D",
+      "enrightPercent": "Enright %",
+      "sixMWWork": "Trabajo 6MW",
+      "dsp": "DSP",
+      "maxTestHr": "FC Máx Prueba",
+      "maxTestHrPercent": "% FC Máx Prueba",
+      "stops": "Paradas",
+      "stopsTime": "Tiempo Paradas",
+      "avgSpo2": "SpO₂ Promedio",
+      "avgHr": "FC Promedio",
+      "minTestSpo2": "SpO₂ Mínima Prueba",
+      "sixMwSpeed": "Vel. 6MW"
+    },
+    "average": {
+      "avgFirstMin": "Promedio 1ª min",
+      "avgSecondMin": "Promedio 2ª min",
+      "avgThirdMin": "Promedio 3ª min",
+      "avgFourthMin": "Promedio 4ª min",
+      "avgFifthMin": "Promedio 5ª min",
+      "avgSixthMin": "Promedio 6ª min"
+    },
+    "periodic": {
+      "min1": "Min 1",
+      "min2": "Min 2",
+      "min3": "Min 3",
+      "min4": "Min 4",
+      "min5": "Min 5",
+      "min6": "Min 6"
+    },
+    "checkpoints": {
+      "meters": "Metros",
+      "time": "Tiempo",
+      "heartRate": "Frecuencia Cardíaca",
+      "saturation": "Saturación"
+    }
+  },
+  "defaults": {
+    "noData": "Sin datos"
+  },
+  "units": {
+    "mts": "mts",
+    "ppm": "ppm",
+    "percent": "%",
+    "borg": "Borg",
+    "liters": "L"
+  }
+}

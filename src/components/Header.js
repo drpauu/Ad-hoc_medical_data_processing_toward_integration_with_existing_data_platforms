@@ -1,7 +1,13 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import logo from '../assets/logo-web.png'; // Ajusta la extensión si es .png u otro formato
 
 const Header = () => {
+  const { i18n } = useTranslation();
+  const changeLanguage = (lng) => {
+    i18n.changeLanguage(lng);
+  };
+
   // Wrapper para centrar y aplicar márgenes al fondo
   const headerWrapperStyle = {
     width: '100%',
@@ -18,7 +24,7 @@ const Header = () => {
     alignItems: 'center',
     justifyContent: 'space-between',
     padding: '0 20px',     // Espaciado interior hasta los márgenes
-    height: '100px',         // Aumentado para mayor anchura vertical
+    height: '100px',       // Aumentado para mayor anchura vertical
     backgroundColor: '#0067B1'
   };
 
@@ -75,20 +81,42 @@ const Header = () => {
           <img src={logo} alt="Hospital del Mar Barcelona" style={{ height: '60px' }} />
         </a>
 
-        {/* Grupo de idiomas encima del buscador */}
         <div style={rightGroupStyle}>
           <nav style={navStyle}>
-            <a href="?lang=ca" style={linkStyle}>CATALÀ</a>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                changeLanguage('ca');
+              }}
+              style={linkStyle}
+            >
+              CATALÀ
+            </a>
             <span style={separatorStyle}>|</span>
-            <a href="?lang=es" style={linkStyle}>CASTELLANO</a>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                changeLanguage('es');
+              }}
+              style={linkStyle}
+            >
+              CASTELLANO
+            </a>
             <span style={separatorStyle}>|</span>
-            <a href="?lang=en" style={linkStyle}>ENGLISH</a>
+            <a
+              href="#"
+              onClick={e => {
+                e.preventDefault();
+                changeLanguage('en');
+              }}
+              style={linkStyle}
+            >
+              ENGLISH
+            </a>
           </nav>
-
-          <form style={{ display: 'flex' }} onSubmit={e => e.preventDefault()}>
-            <input type="text" placeholder="" style={inputStyle} />
-            <button type="submit" style={buttonStyle}>&gt;&gt;</button>
-          </form>
+          
         </div>
       </div>
     </header>

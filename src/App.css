@@ -31,33 +31,12 @@ html, body {
 
 /* 4. Zona de contenido */
 .content {
-  flex: 1;               /* Empuja el footer hacia abajo */
+  flex: 1;             
   padding: 20px;         /* Ajusta según convenga */
   max-width: 1200px;     /* Para centrar y limitar ancho */
   margin: 0 auto;
 }
 
-/* 5. Footer al estilo Hospital del Mar 
-footer {
-  background-color: var(--color-bg-light);
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 40px 20px;
-  text-align: center;
-  width: 100%;
-  font-size: 14px;
-  color: var(--color-text-dark);
-}
-
- Enlaces del footer */
-footer a {
-  color: var(--color-primary);
-  text-decoration: none;
-  margin: 0 8px;
-  transition: opacity 0.2s ease;
-}
-footer a:hover {
-  opacity: 0.7;
-}
 
 /* 6. Botones primarios */
 .btn-primary {

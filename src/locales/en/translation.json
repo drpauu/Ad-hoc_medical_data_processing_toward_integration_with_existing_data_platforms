@@ -1,0 +1,145 @@
+{
+  "home": {
+    "title": "6MWT Data Viewer",
+    "subtitle": "Select an option to view more details:",
+    "testsLink": "Tests",
+    "doctorsLink": "Doctors"
+  },
+  "testList": {
+    "title": "Test List"
+  },
+  "doctorsList": {
+    "title": "Doctors List",
+    "noDoctors": "No doctors available."
+  },
+  "doctorTests": {
+    "title": "Tests for Doctor {{did}}",
+    "noTests": "This doctor has not performed any tests yet."
+  },
+  "editPage": {
+    "labelDate": "Date:",
+    "buttonSave": "Save Changes"
+  },
+  "testDetails": {
+    "loading": "Loading data...",
+    "error": "Error: {{message}}",
+    "noData": "No test data available."
+  },
+  "buttons": {
+    "downloadPdf": "Download PDF",
+    "downloadExcel": "Download Excel"
+  },
+  "selectTables": {
+    "header": "Select tables to display and download:",
+    "test": "Test",
+    "antropometricValues": "Anthropometric Values",
+    "comments": "Comments",
+    "basalValues": "Basal Values",
+    "finalValues": "Final Values",
+    "restValues": "Rest Values",
+    "computedValues": "Computed Values",
+    "averageValues": "Average Values",
+    "periodicValues": "Periodic Values",
+    "checkpoints": "Checkpoints"
+  },
+  "charts": {
+    "sectionTitle": "6MWT data:",
+    "checkpoints": "Test checkpoints",
+    "testData": "Test data"
+  },
+  "tableTitles": {
+    "test": "Test",
+    "antropometricValues": "Anthropometric Values",
+    "comments": "Comments",
+    "basalValues": "Basal Values",
+    "finalValues": "Final Values",
+    "restValues": "Rest Values",
+    "computedValues": "Computed Values",
+    "averageValues": "Average Values",
+    "periodicValues": "Periodic Values",
+    "checkpoints": "Checkpoints"
+  },
+  "tableHeaders": {
+    "test": {
+      "date": "Date",
+      "time": "Time",
+      "coneDistance": "Cone Distance",
+      "id": "Id",
+      "hash": "Hash"
+    },
+    "antropometric": {
+      "name": "Name",
+      "gender": "Gender",
+      "age": "Age",
+      "weightHeight": "Weight – Height",
+      "imc": "BMI"
+    },
+    "basal": {
+      "saturation": "Saturation (SpO₂)",
+      "heartRate": "Heart Rate (HR)",
+      "hrPercentage": "HR Percentage %",
+      "dyspnea": "Dyspnea (D)",
+      "fatigue": "Fatigue (F)",
+      "o2": "O₂"
+    },
+    "final": {
+      "meters": "Meters",
+      "dyspnea": "Dyspnea (D)",
+      "fatigue": "Fatigue (F)"
+    },
+    "rest": {
+      "halfRestSpo": "Half Rest SpO₂",
+      "halfRestHr": "Half Rest HR",
+      "halfRestHrPercentage": "Half Rest HR %",
+      "restEndSpo": "Rest End SpO₂",
+      "restEndHr": "Rest End HR",
+      "restEndHrPercentage": "Rest End HR %"
+    },
+    "computed": {
+      "enrightD": "Enright D",
+      "enrightPercent": "Enright %",
+      "sixMWWork": "6MW Work",
+      "dsp": "DSP",
+      "maxTestHr": "Max Test HR",
+      "maxTestHrPercent": "Max Test HR %",
+      "stops": "Stops",
+      "stopsTime": "Stops Time",
+      "avgSpo2": "Avg SpO₂",
+      "avgHr": "Avg HR",
+      "minTestSpo2": "Min Test SpO₂",
+      "sixMwSpeed": "6MW Speed"
+    },
+    "average": {
+      "avgFirstMin": "Avg 1st min",
+      "avgSecondMin": "Avg 2nd min",
+      "avgThirdMin": "Avg 3rd min",
+      "avgFourthMin": "Avg 4th min",
+      "avgFifthMin": "Avg 5th min",
+      "avgSixthMin": "Avg 6th min"
+    },
+    "periodic": {
+      "min1": "Min 1",
+      "min2": "Min 2",
+      "min3": "Min 3",
+      "min4": "Min 4",
+      "min5": "Min 5",
+      "min6": "Min 6"
+    },
+    "checkpoints": {
+      "meters": "Meters",
+      "time": "Time",
+      "heartRate": "Heart Rate",
+      "saturation": "Saturation"
+    }
+  },
+  "defaults": {
+    "noData": "No data"
+  },
+  "units": {
+    "mts": "mts",
+    "ppm": "ppm",
+    "percent": "%",
+    "borg": "Borg",
+    "liters": "L"
+  }
+}

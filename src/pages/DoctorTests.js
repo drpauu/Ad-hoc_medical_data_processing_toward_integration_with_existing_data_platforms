@@ -1,8 +1,9 @@
-// src/pages/DoctorTests.js
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 const DoctorTests = () => {
+  const { t } = useTranslation();
   const { did } = useParams();        // id del doctor en la ruta
   const [tests, setTests] = useState([]);
 
@@ -20,7 +21,7 @@ const DoctorTests = () => {
 
   return (
     <div>
-      <h2>Tests del Doctor {did}</h2>
+      <h2>{t('doctorTests.title', { did })}</h2>
 
       {tests.length ? (
         <ul>
@@ -32,11 +33,10 @@ const DoctorTests = () => {
           ))}
         </ul>
       ) : (
-        <p>Este doctor aún no ha realizado ningún test.</p>
+        <p>{t('doctorTests.noTests')}</p>
       )}
     </div>
   );
 };
 
 export default DoctorTests;
-

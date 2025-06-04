@@ -3,7 +3,6 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Header       from './components/Header';
-import Footer       from './components/Footer';
 import Home         from './pages/Home';
 import TestList     from './pages/TestList';
 import TestDetails  from './pages/testDetails2';
@@ -31,7 +30,6 @@ function App() {
           <Route path="/test/:id"    element={<TestDetails />} />
         </Routes>
       </div>
-      <Footer />
     </Router>
   );
 }
