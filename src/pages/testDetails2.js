@@ -87,6 +87,16 @@ const InfoTooltip = ({ text }) => {
     </div>
   );
 };
+const tooltipLabel = (ctx) => {
+  let label = ctx.dataset.label || '';
+  if (label) label += ': ';
+
+  // ctx.parsed es {x, y} en series XY; si es numérico se usa tal cual
+  const val = typeof ctx.parsed === 'object' ? ctx.parsed.y : ctx.parsed;
+  label += Math.round(val * 100) / 100;     // redondeo a 2 decimales
+  return label;
+};
+
 
 const TestDetails = () => {
   const { t } = useTranslation();
@@ -1030,14 +1040,7 @@ const TestDetails = () => {
       tooltip: {
         mode: 'nearest',
         intersect: true,
-        callbacks: {
-          label: function(tooltipItem) {
-            let label = tooltipItem.dataset.label || '';
-            if (label) label += ': ';
-            label += Math.round(tooltipItem.raw * 100) / 100;
-            return label;
-          }
-        }
+        callbacks: { label: tooltipLabel }  
       }
     }
   };
@@ -1062,65 +1065,84 @@ const TestDetails = () => {
       tooltip: {
         mode: 'nearest',
         intersect: true,
-        callbacks: {
-          label: function(tooltipItem) {
-            let label = tooltipItem.dataset.label || '';
-            if (label) label += ': ';
-            label += Math.round(tooltipItem.raw * 100) / 100;
-            return label;
-          }
-        }
+        callbacks: { label: tooltipLabel }  
       }
     }
   };
 
   // Datos para la gráfica SPO₂/HR con opacidad variable según si el tiempo está entre cpXMin y cpXMax
-  const spo2HrData = {
-    datasets: [
-      {
-        label: 'SPO₂',
-        data: spoData,
-        // El color del borde se decidirá por cada segmento
-        segment: {
-          borderColor: ctx => {
-            const x0 = ctx.p0.parsed.x;
-            const x1 = ctx.p1.parsed.x;
-            // Si el segmento está dentro de [cpXMin, cpXMax], opacidad 1; si no, 0.5
-            return (x0 >= cpXMin && x1 <= cpXMax)
-              ? 'rgba(75,192,192,1)'
-              : 'rgba(75,192,192,0.5)';
-          }
-        },
-        // Punto de hover siempre con opacidad 1 para visibilidad
-        pointRadius: 0,
-        hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(75,192,192,1)'
+  // ─── Datos para la gráfica SPO₂/HR con opacidad variable según rango de checkpoints ────
+  // ─── Datos para la gráfica SPO₂/HR con opacidad variable según rango de checkpoints ────
+const spo2HrData = {
+  datasets: [
+    {
+      label: 'SPO₂',
+      data: spoData,
+
+      // ── 1) Color de borde estático en opacidad 1 (para el icono de la leyenda) ──
+      borderColor: 'rgba(75,192,192,1)',
+
+      // ── 2) Relleno semitransparente (para que la leyenda pinte el interior del rectángulo) ──
+      backgroundColor: 'rgba(75,192,192,0.2)',
+
+      // ── 4) Color dinámico de cada segmento según si está dentro de [cpXMin, cpXMax] ──
+      segment: {
+        borderColor: ctx => {
+          const x0 = ctx.p0.parsed.x;
+          const x1 = ctx.p1.parsed.x;
+          return (x0 >= cpXMin && x1 <= cpXMax)
+            ? 'rgba(75,192,192,1)'   // dentro del tramo de prueba: opacidad 1
+            : 'rgba(75,192,192,0.5)'; // fuera del tramo de prueba: opacidad 0.5
+        }
       },
-      {
-        label: 'HR',
-        data: hrData,
-        segment: {
-          borderColor: ctx => {
-            const x0 = ctx.p0.parsed.x;
-            const x1 = ctx.p1.parsed.x;
-            return (x0 >= cpXMin && x1 <= cpXMax)
-              ? 'rgba(255,99,132,1)'
-              : 'rgba(255,99,132,0.5)';
-          }
-        },
-        pointRadius: 0,
-        hoverRadius: 8,
-        pointHoverBackgroundColor: 'rgba(255,99,132,1)'
-      }
-    ]
-  };
+
+      // ── 5) Configuración de puntos y hover ──
+      pointRadius: 0,
+      hoverRadius: 8,
+      pointBackgroundColor: 'rgba(75,192,192,1)',
+      pointBorderColor: 'rgba(75,192,192,1)',
+      pointHoverBackgroundColor: 'rgba(75,192,192,1)'
+    },
+    {
+      label: t('charts.cor'),
+      data: hrData,
+
+      // ── 1) Color de borde estático en opacidad 1 (para la leyenda) ──
+      borderColor: 'rgba(255,99,132,1)',
+
+      // ── 2) Relleno semitransparente para el icono de la leyenda ──
+      backgroundColor: 'rgba(255,99,132,0.2)',
+
+
+      // ── 4) Color dinámico por segmentos ──
+      segment: {
+        borderColor: ctx => {
+          const x0 = ctx.p0.parsed.x;
+          const x1 = ctx.p1.parsed.x;
+          return (x0 >= cpXMin && x1 <= cpXMax)
+            ? 'rgba(255,99,132,1)'   // dentro del tramo de prueba: opacidad 1
+            : 'rgba(255,99,132,0.5)'; // fuera del tramo de prueba: opacidad 0.5
+        }
+      },
+
+      // ── 5) Configuración de puntos y hover ──
+      pointRadius: 0,
+      hoverRadius: 8,
+      pointBackgroundColor: 'rgba(255,99,132,1)',
+      pointBorderColor: 'rgba(255,99,132,1)',
+      pointHoverBackgroundColor: 'rgba(255,99,132,1)'
+    }
+  ]
+};
+
+
 
   // Datos para la gráfica de checkpoints
   const checkpointData = {
     labels: checkpointTimes,
     datasets: [
       {
-        label: t('charts.checkpoints'),
+        label: 'SPO₂',
         data: checkpointSpo,
         borderColor: 'blue',
         backgroundColor: 'rgba(54, 162, 235, 0.2)',
@@ -1128,7 +1150,7 @@ const TestDetails = () => {
         pointRadius: 5
       },
       {
-        label: t('charts.testData'),
+        label: t('charts.cor'),
         data: checkpointHr,
         borderColor: 'red',
         backgroundColor: 'rgba(255, 99, 132, 0.2)',
@@ -1222,13 +1244,15 @@ const TestDetails = () => {
       </div>
 
 
-      {/* ——————————————————————————————————————————————————————————————— */}
+      {/* ——————————————————————————————————————————— */}
       {/* GRÁFICA DE PUNTOS DE CONTROL (checkpoints) */}
       {selectedTables.checkpoint_data && (
-        <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ display: 'flex', alignItems: 'center'}}>
+        <div
+          style={{ marginBottom: '30px' }}
+          ref={grafic_checkpoints}  
+        >
+          <h2 style={{ display: 'flex', alignItems: 'center' }}>
             {t('charts.checkpoints')}
-            {/* Insertamos aquí nuestro InfoTooltip */}
             <InfoTooltip text={t('charts.checkpointsInfo')} />
           </h2>
           <div style={{ height: '300px', width: '100%' }}>
@@ -1243,13 +1267,15 @@ const TestDetails = () => {
         </div>
       )}
 
-      {/* ——————————————————————————————————————————————————————————————— */}
+      {/* ——————————————————————————————————————————— */}
       {/* GRÁFICA DE DATOS DEL TEST (SPO₂/HR) */}
       {selectedTables.test_data && (
-        <div style={{ marginBottom: '30px' }}>
-          <h2 style={{ display: 'flex', alignItems: 'center'}}>
-            {t('charts.testData')} (SPO₂/HR)
-            {/* InfoTooltip para la segunda gráfica */}
+        <div
+          style={{ marginBottom: '30px' }}
+          ref={grafic_data}             
+        >
+          <h2 style={{ display: 'flex', alignItems: 'center' }}>
+            {t('charts.testData')}
             <InfoTooltip text={t('charts.testDataInfo')} />
           </h2>
           <div style={{ height: '300px', width: '100%' }}>
@@ -1263,6 +1289,7 @@ const TestDetails = () => {
           </div>
         </div>
       )}
+
 
 
       <div ref={contentRef} style={{ marginTop: '30px' }}>

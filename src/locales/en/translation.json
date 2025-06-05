@@ -43,9 +43,10 @@
     "checkpoints": "Checkpoints"
   },
   "charts": {
+    "cor": "HR",
     "sectionTitle": "6MWT data:",
-    "checkpoints": "Test checkpoints",
-    "testData": "Test data",
+    "checkpoints": "Graph of Checkpoints",
+    "testData": "Graph of Test Data",
     "checkpointsInfo": "This chart represents SpO₂ and heart rate at each checkpoint during the 6MWT.",
     "testDataInfo": "This chart displays all SpO₂ and heart rate data collected throughout the 6MWT, with color shading to indicate different stages of the test."
   },
@@ -142,6 +143,9 @@
     "ppm": "ppm",
     "percent": "%",
     "borg": "Borg",
-    "liters": "L"
+    "liters": "L",
+    "time": "Time",
+    "value": "SPO₂ / HR",
+    "sec": "seconds"
   }
 }
