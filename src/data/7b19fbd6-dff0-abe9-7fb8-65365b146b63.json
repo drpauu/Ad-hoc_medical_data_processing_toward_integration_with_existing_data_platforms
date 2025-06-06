@@ -1,12 +1,14 @@
 {
     "test": {
-        "pid": "169ff3ad-e9d4-d20a-015c-653657c5f9ee",
-        "tid": "7b19fbd6-dff0-abe9-7fb8-65365b146b63",
+        "pid": "169ff3ad-e9d4-d20a-015c-653657c5f9ee3",
+        "tid": "7b19fbd6-dff0-abe9-7fb8-65365b146b633",
         "date": "2023-10-22T22:00:00.000Z",
         "o2": 0,
         "weight": 64,
         "height": 180,
         "age": 43,
+        "name": "Pau",
+        "gender": "home",
         "cone_distance": 25
     },
     "initial": {

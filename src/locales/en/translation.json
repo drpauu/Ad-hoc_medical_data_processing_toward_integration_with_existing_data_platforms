@@ -5,8 +5,14 @@
     "testsLink": "Tests",
     "doctorsLink": "Doctors"
   },
+
+  "errors": {
+    "invalidNumber": "The entered value is not a valid number.",
+    "updateFailed": "Error al guardar la modificación."
+  },
   "testList": {
-    "title": "Test List"
+    "title": "Test List",
+    "noTests": "No tests available."
   },
   "doctorsList": {
     "title": "Doctors List",
@@ -27,7 +33,11 @@
   },
   "buttons": {
     "downloadPdf": "Download PDF",
-    "downloadExcel": "Download Excel"
+    "downloadExcel": "Download Excel",
+    "edit": "Edit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete"
   },
   "selectTables": {
     "header": "Select tables to display and download:",
@@ -74,7 +84,8 @@
       "name": "Name",
       "gender": "Gender",
       "age": "Age",
-      "weightHeight": "Weight – Height",
+      "weight": "Weight",
+      "height": "Height",
       "imc": "BMI"
     },
     "basal": {

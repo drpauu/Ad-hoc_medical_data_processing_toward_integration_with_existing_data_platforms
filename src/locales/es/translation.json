@@ -6,7 +6,8 @@
     "doctorsLink": "Doctores"
   },
   "testList": {
-    "title": "Lista de Tests"
+    "title": "Lista de Tests",
+    "noTests": "No hay tests disponibles."
   },
   "doctorsList": {
     "title": "Lista de Doctores",
@@ -27,7 +28,11 @@
   },
   "buttons": {
     "downloadPdf": "Descargar PDF",
-    "downloadExcel": "Descargar Excel"
+    "downloadExcel": "Descargar Excel",
+    "edit": "Editar",
+    "cancel": "Cancelar",
+    "save": "Guardar",
+    "delete": "Eliminar"
   },
   "selectTables": {
     "header": "Selecciona las tablas para mostrar y descargar:",
@@ -62,6 +67,10 @@
     "periodicValues": "Valores Periódicos",
     "checkpoints": "Puntos de Control"
   },
+  "errors": {
+    "invalidNumber": "El valor ingresado no es un número válido.",
+    "updateFailed": "Error al guardar la modificación."
+  },
   "tableHeaders": {
     "test": {
       "date": "Fecha",
@@ -74,7 +83,8 @@
       "name": "Nombre",
       "gender": "Género",
       "age": "Edad",
-      "weightHeight": "Peso – Altura",
+      "weight": "Peso",
+      "height": "Altura",
       "imc": "IMC"
     },
     "basal": {

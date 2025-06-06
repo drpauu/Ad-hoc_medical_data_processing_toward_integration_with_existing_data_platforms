@@ -5,7 +5,7 @@ import translationEN from "./locales/en/translation.json";
 import translationES from "./locales/es/translation.json";
 import translationCA from "./locales/ca/translation.json";
 
-const savedLang = localStorage.getItem("i18nextLng") || "en";
+const savedLang = localStorage.getItem("i18nextLng") || "ca";
 
 i18n
   .use(initReactI18next)

@@ -5,8 +5,13 @@
     "testsLink": "Proves",
     "doctorsLink": "Metges"
   },
+  "errors": {
+    "invalidNumber": "El valor introduït no és un número vàlid.",
+    "updateFailed": "Error al guardar la modificació."
+  },
   "testList": {
-    "title": "Llista de Proves"
+    "title": "Llista de Proves",
+    "noTests": "No hi ha proves disponibles."
   },
   "doctorsList": {
     "title": "Llista de Metges",
@@ -27,7 +32,11 @@
   },
   "buttons": {
     "downloadPdf": "Descarregar PDF",
-    "downloadExcel": "Descarregar Excel"
+    "downloadExcel": "Descarregar Excel",
+    "edit": "Editar",
+    "cancel": "Cancel·lar",
+    "save": "Desa",
+    "delete": "Esborrar"
   },
   "selectTables": {
     "header": "Selecciona les taules per mostrar i descarregar:",
@@ -74,7 +83,8 @@
       "name": "Nom",
       "gender": "Gènere",
       "age": "Edat",
-      "weightHeight": "Pes – Alçada",
+      "weight": "Pes",
+      "height": "Alçada",
       "imc": "IMC"
     },
     "basal": {

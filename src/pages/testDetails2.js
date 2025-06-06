@@ -144,6 +144,101 @@ const TestDetails = () => {
       });
   }, [id]);
 
+  const handleEditAnthro = async (field) => {
+    if (!test) return;
+  
+    // 1) Asegurarnos de que exista el subdocumento “test.test”
+    const baseTestData = test.test || {};
+  
+    // 2) Obtener valor actual y etiqueta para mensajes
+    const currentValue = baseTestData[field];
+    const labelMap = {
+      name: t('tableHeaders.antropometric.name'),
+      gender: t('tableHeaders.antropometric.gender'),
+      age: t('tableHeaders.antropometric.age'),
+      weight: t('tableHeaders.antropometric.weight'),
+      height: t('tableHeaders.antropometric.height'),
+    };
+    const campoLabel = labelMap[field] || field;
+  
+    let parsedValue;
+    if (field === 'gender') {
+      const isHome = window.confirm(
+        t('prompts.selectGender') || 'És Home? (Cancel = Dona)'
+      );
+      parsedValue = isHome ? 'Home' : 'Dona';
+    } else {
+      const inputDefault = currentValue != null ? String(currentValue) : '';
+      const newValue = window.prompt(
+        `Ingrese nuevo ${campoLabel}:`,
+        inputDefault
+      );
+      if (newValue === null) return;
+      if (String(newValue).trim() === String(currentValue).trim()) return;
+  
+      if (
+        !window.confirm(
+          t('confirmations.modifyField', { field: campoLabel })
+        )
+      ) {
+        return;
+      }
+  
+      if (field === 'name') {
+        parsedValue = newValue.trim();
+      } else {
+        const numero = Number(newValue);
+        if (isNaN(numero)) {
+          alert(t('errors.invalidNumber'));
+          return;
+        }
+        parsedValue = numero;
+      }
+    }
+  
+    try {
+      // 3) Construir el objeto test actualizado:
+      const updatedTestData = {
+        ...baseTestData,
+        [field]: parsedValue,
+      };
+  
+      // 4) Construir el payload completo (mantener todas las propiedades del documento)
+      const fullPayload = {
+        ...test,
+        test: updatedTestData,
+      };
+  
+      // 5) Enviar con PUT al mismo endpoint que usas para GET (asumiendo que tu backend emplea PUT /api/tests/:id)
+      const response = await fetch(
+        `http://localhost:5000/api/tests/${id}`,
+        {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(fullPayload),
+        }
+      );
+  
+      if (response.status === 404) {
+        throw new Error('Ruta no encontrada (404). Verifica que tu backend exponga PUT /api/tests/:id');
+      }
+      if (!response.ok) {
+        let errMsg = `HTTP ${response.status}`;
+        try {
+          const errData = await response.json();
+          if (errData.message) errMsg += `: ${errData.message}`;
+        } catch {}
+        throw new Error(errMsg);
+      }
+  
+      // 6) Actualizar estado local
+      setTest(fullPayload);
+    } catch (err) {
+      console.error('Error updating field:', err);
+      alert(`${t('errors.updateFailed')}\n${err.message}`);
+    }
+  };
+  
   const handleDownloadPdf = async () => {
     // 1) Crear instancia de jsPDF en formato A4 (unidades en puntos)
     const doc = new jsPDF({ format: 'a4', unit: 'pt' });
@@ -640,7 +735,7 @@ const TestDetails = () => {
           test.test.gender ?? t('defaults.noData'),
           test.test.age ? `${test.test.age}` : t('defaults.noData'),
           (test.test.weight != null && test.test.height != null)
-            ? `${test.test.weight} Kg - ${test.test.height} Cms`
+            ? `${test.test.weight} Kg - ${test.test.height} cm`
             : t('defaults.noData'),
           (test.test.weight != null && test.test.height != null)
             ? `${(test.test.weight / ((test.test.height / 100) ** 2)).toFixed(1)}`
@@ -1342,7 +1437,7 @@ const spo2HrData = {
             <table>
               <thead>
                 <tr>
-                  <th colSpan="5" className="table-title">
+                  <th colSpan="6" className="table-title">
                     {t('tableTitles.antropometricValues')}
                   </th>
                 </tr>
@@ -1350,28 +1445,86 @@ const spo2HrData = {
                   <th>{t('tableHeaders.antropometric.name')}</th>
                   <th>{t('tableHeaders.antropometric.gender')}</th>
                   <th>{t('tableHeaders.antropometric.age')}</th>
-                  <th>{t('tableHeaders.antropometric.weightHeight')}</th>
+                  <th>{t('tableHeaders.antropometric.weight')}</th>
+                  <th>{t('tableHeaders.antropometric.height')}</th>
                   <th>{t('tableHeaders.antropometric.imc')}</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>{test.test.name ?? t('defaults.noData')}</td>
-                  <td>{test.test.gender ?? t('defaults.noData')}</td>
-                  <td>
-                    {test.test.age != null
-                      ? `${test.test.age}`
-                      : t('defaults.noData')}
+                  {/* Nombre */}
+                  <td style={{ position: 'relative' }}>
+                    {test.test.name ?? t('defaults.noData')}
+                    <button
+                      onClick={() => handleEditAnthro('name')}
+                      className="edit-button"
+                      title={t('buttons.edit')}
+                    >
+                      ✎
+                    </button>
                   </td>
+
+                  {/* Género */}
+                  <td style={{ position: 'relative' }}>
+                    {test.test.gender ?? t('defaults.noData')}
+                    <button
+                      onClick={() => handleEditAnthro('gender')}
+                      className="edit-button"
+                      title={t('buttons.edit')}
+                    >
+                      ✎
+                    </button>
+                  </td>
+
+                  {/* Edad */}
+                  <td style={{ position: 'relative' }}>
+                    {test.test.age != null ? `${test.test.age}` : t('defaults.noData')}
+                    <button
+                      onClick={() => handleEditAnthro('age')}
+                      className="edit-button"
+                      title={t('buttons.edit')}
+                    >
+                      ✎
+                    </button>
+                  </td>
+
+                  {/* Peso */}
+                  <td style={{ position: 'relative' }}>
+                    {test.test.weight != null
+                      ? `${test.test.weight} Kg`
+                      : t('defaults.noData')}
+                    <button
+                      onClick={() => handleEditAnthro('weight')}
+                      className="edit-button"
+                      title={t('buttons.edit')}
+                    >
+                      ✎
+                    </button>
+                  </td>
+
+                  {/* Altura */}
+                  <td style={{ position: 'relative' }}>
+                    {test.test.height != null
+                      ? `${test.test.height} Cms`
+                      : t('defaults.noData')}
+                    <button
+                      onClick={() => handleEditAnthro('height')}
+                      className="edit-button"
+                      title={t('buttons.edit')}
+                    >
+                      ✎
+                    </button>
+                  </td>
+
+                  {/* IMC (solo lectura) */}
                   <td>
                     {test.test.weight != null && test.test.height != null
-                      ? `${test.test.weight} Kg - ${test.test.height} Cms`
-                      : t('defaults.noData')}
-                  </td>
-                  <td>
-                    {test.test.weight != null && test.test.height != null
-                      ? `${(test.test.weight /
-                          ((test.test.height / 100) ** 2)).toFixed(1)}`
+                      ? `${
+                          (
+                            test.test.weight /
+                            ((test.test.height / 100) ** 2)
+                          ).toFixed(1)
+                        }`
                       : t('defaults.noData')}
                   </td>
                 </tr>
@@ -1379,6 +1532,8 @@ const spo2HrData = {
             </table>
           </div>
         )}
+
+
 
         {selectedTables.comments && (
           <div id="comments-table" className="formatted-table">
@@ -1956,6 +2111,24 @@ const spo2HrData = {
           tr:nth-child(even) td {
             background-color: var(--color-bg-light);
           }
+
+          .edit-button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            margin-left: 6px;
+            color: var(--color-secondary);
+            font-size: 0.9em;
+            vertical-align: middle;
+            padding: 2px 4px;
+            border-radius: var(--border-radius);
+            transition: background-color 0.2s ease;
+          }
+          .edit-button:hover {
+            background-color: var(--color-bg-light);
+            color: var(--color-primary);
+          }
+
         `}
         </style>
       </div>
