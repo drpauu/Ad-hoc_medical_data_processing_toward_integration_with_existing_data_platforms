@@ -157,5 +157,14 @@
     "time": "Tiempo",
     "value": "SPO₂ / FC",
     "sec": "segudnos"
+  },
+  "confirmations": {
+    "modifyField": "El campo se ha modificado correctamente, quieres guardar los cambios?"
+  },
+  "dates": {
+    "inicial": "Fecha inicial",
+    "final": "Fecha final",
+    "filtrer": "Filtrar por fecha",
+    "dist": "Filtrar por distancia"
   }
 }

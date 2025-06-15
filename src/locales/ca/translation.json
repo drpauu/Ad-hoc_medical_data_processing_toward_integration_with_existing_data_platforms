@@ -157,5 +157,14 @@
     "time": "Temps",
     "value": "SPO₂ / FC",
     "sec": "segons"
+  },
+  "confirmations": {
+    "modifyField": "Aquest camp he sigut modificat. Vols desar els canvis?"
+  },
+  "dates": {
+    "inicial": "Data inicial",
+    "final": "Data final",
+    "filtrer": "Filtrar per data",
+    "dist": "Filtrar per distància"
   }
 }

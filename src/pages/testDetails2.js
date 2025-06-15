@@ -1455,25 +1455,11 @@ const spo2HrData = {
                   {/* Nombre */}
                   <td style={{ position: 'relative' }}>
                     {test.test.name ?? t('defaults.noData')}
-                    <button
-                      onClick={() => handleEditAnthro('name')}
-                      className="edit-button"
-                      title={t('buttons.edit')}
-                    >
-                      ✎
-                    </button>
                   </td>
 
                   {/* Género */}
                   <td style={{ position: 'relative' }}>
                     {test.test.gender ?? t('defaults.noData')}
-                    <button
-                      onClick={() => handleEditAnthro('gender')}
-                      className="edit-button"
-                      title={t('buttons.edit')}
-                    >
-                      ✎
-                    </button>
                   </td>
 
                   {/* Edad */}
