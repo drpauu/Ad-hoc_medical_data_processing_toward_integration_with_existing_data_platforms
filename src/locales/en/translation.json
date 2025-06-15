@@ -160,7 +160,8 @@
     "sec": "seconds"
   },
   "confirmations": {
-    "modifyField": "This field has been modified, do you want to save the changes?"
+    "modifyField": "This field has been modified, do you want to save the changes?",
+    "insert:": "Insert"
   },
   "dates": {
     "inicial": "Start date",

@@ -170,7 +170,7 @@ const TestDetails = () => {
     } else {
       const inputDefault = currentValue != null ? String(currentValue) : '';
       const newValue = window.prompt(
-        `Ingrese nuevo ${campoLabel}:`,
+        `${campoLabel}:`,
         inputDefault
       );
       if (newValue === null) return;

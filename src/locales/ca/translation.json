@@ -159,7 +159,8 @@
     "sec": "segons"
   },
   "confirmations": {
-    "modifyField": "Aquest camp he sigut modificat. Vols desar els canvis?"
+    "modifyField": "Aquest camp he sigut modificat. Vols desar els canvis?",
+    "insert:": "Insereix"
   },
   "dates": {
     "inicial": "Data inicial",
