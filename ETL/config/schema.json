@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["test", "initial", "final"],
+  "properties": {
+    "test": {
+      "type": "object",
+      "required": ["tid", "pid", "date"],
+      "properties": {
+        "tid":  { "type": "string" },
+        "pid":  { "type": "string" },
+        "date": { "type": "string", "format": "date-time" },
+        "cone_distance": { "type": "integer" },
+        "name":   { "type": "string" },
+        "gender": { "type": "string" },
+        "age":    { "type": "integer" },
+        "weight": { "type": "number"  },
+        "height": { "type": "number"  },
+        "o2":     { "type": ["number", "integer"] }
+      }
+    },
+    "initial": {
+      "type": "object",
+      "required": ["spo", "hr", "d", "f"],
+      "properties": {
+        "spo": { "type": "integer" },
+        "hr":  { "type": "integer" },
+        "d":   { "type": "integer" },
+        "f":   { "type": "integer" }
+      }
+    },
+    "final": {
+      "type": "object",
+      "required": ["meters", "d", "f"],
+      "properties": {
+        "meters":       { "type": "integer" },
+        "d":            { "type": "integer" },
+        "f":            { "type": "integer" },
+        "half_rest_spo":{ "type": "integer" },
+        "half_rest_hr": { "type": "integer" },
+        "end_rest_spo": { "type": "integer" },
+        "end_rest_hr":  { "type": "integer" },
+        "comment":      { "type": ["string","null"] }
+      }
+    }
+  },
+  "additionalProperties": true
+}
