@@ -5,8 +5,8 @@ from pydantic import Field
 class Settings(BaseSettings):
     # --- conexión Mongo ---
     MONGO_URI: str
-    DB_NAME: str = Field(default="six_mwt")
-    COLL_RAW: str = Field(default="tests_raw")
+    DB_NAME: str = Field(default="database")
+    COLL_RAW: str = Field(default="tests")
     COLL_CLEAN: str = Field(default="tests")
 
     # --- límites y rutas ---
