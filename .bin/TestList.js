@@ -1,4 +1,3 @@
-// TestList.js
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
@@ -18,7 +17,6 @@ const TestList = () => {
       <ul>
         {tests.map(test => (
           <li key={test._id}>
-            {/* Puedes mostrar algún identificador o campo descriptivo del test */}
             <Link to={`/test/${test._id}`}>{test.test.pid}</Link>
           </li>
         ))}

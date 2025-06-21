@@ -17,7 +17,7 @@ import database from '../src/data/database.json';
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 const TestDetails = () => {
-  // == 1) Estado para saber qué tablas están seleccionadas ==
+
   const [selectedTables, setSelectedTables] = useState({
     test: true,
     antropometric: true,
@@ -25,13 +25,13 @@ const TestDetails = () => {
     basal: true,
     final: true,
     rest: true,
-    computed1: true, // <= Aquí se unifica la tabla "Computed values"
+    computed1: true, 
     average: true,
     periodic: true,
     checkpoints: true
   });
 
-  // Función para cambiar el estado de una tabla concreta
+
   const handleTableSelection = (tableKey) => {
     setSelectedTables(prev => ({
       ...prev,
@@ -41,7 +41,7 @@ const TestDetails = () => {
 
   const contentRef = useRef(null);
 
-  // == 2) Descargar PDF ==
+
   const handleDownloadPdf = () => {
     const doc = new jsPDF({
       format: 'a4',
@@ -59,13 +59,10 @@ const TestDetails = () => {
     });
   };
 
-  // == 3) Descargar Excel ==
+
   const handleDownloadExcel = () => {
     const wb = XLSX.utils.book_new();
 
-    // Añadimos únicamente las hojas de las tablas que estén seleccionadas
-
-    // === TEST ===
     if (selectedTables.test) {
       const testSheetData = [
         ['Date', 'Time', 'Cone Distance', 'Id', 'Hash'],
@@ -81,7 +78,7 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsTest, 'Test');
     }
 
-    // === ANTROPOMETRIC ===
+
     if (selectedTables.antropometric) {
       const antropometricData = [
         ['Name', 'Gender', 'Age', 'Weight - Height', 'IMC'],
@@ -103,7 +100,7 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsAntro, 'Antropometric');
     }
 
-    // === COMMENTS ===
+
     if (selectedTables.comments) {
       const stopsComment = database.final.comment?.trim() || 'No existeix';
       const commentsData = [
@@ -114,7 +111,6 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsComments, 'Comments');
     }
 
-    // === BASAL ===
     if (selectedTables.basal) {
       const basalData = [
         ['Saturation (spo)', 'Heart Rate (hr)', 'HR %', 'Dyspnea (d)', 'Fatigue (f)', 'O2'],
@@ -143,7 +139,7 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsBasal, 'Basal values');
     }
 
-    // === FINAL ===
+
     if (selectedTables.final) {
       const finalData = [
         ['Meters', 'Dispnea (d)', 'Fatiga (f)'],
@@ -157,7 +153,7 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsFinal, 'Final values');
     }
 
-    // === REST VALUES ===
+
     if (selectedTables.rest) {
       const restData = [
         ['Half rest Spo', 'Half rest HR', 'Half rest HR %', 'Rest end Spo', 'Rest end HR', 'Rest end HR %']
@@ -190,9 +186,8 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsRest, 'Rest values');
     }
 
-    // === Computed(1) === (UNIFICADO)
+
     if (selectedTables.computed1) {
-      // --- PRIMERA PARTE (Enright, 6MW Work, etc.) ---
       const weight = database.test.weight ?? 0;
       const height = database.test.height ?? 0;
       const age = database.test.age ?? 0;
@@ -205,7 +200,7 @@ const TestDetails = () => {
       }
       const sixMWWork = actualDistance * weight;
 
-      // p=1
+
       const data6MW = (database.data || []).filter(d => d.p === 1);
       let lowestSpo2 = 999;
       data6MW.forEach(d => {
@@ -229,7 +224,6 @@ const TestDetails = () => {
         maxTestHrPercent = (maxTestHr / (220 - age)) * 100;
       }
 
-      // --- SEGUNDA PARTE (Stops, avgSpo2, etc.) ---
       const stopsArray = database.stops || [];
       const stopsText = stopsArray
         .map(stop => `${stop.time}" with duration: ${stop.len}"`)
@@ -258,9 +252,9 @@ const TestDetails = () => {
       const finalMeters = database.final.meters ?? 0;
       const sixmwSpeed = finalMeters ? (finalMeters / 360) : 0;
 
-      // Construimos un solo array con filas vacías en medio
+
       const computedSheetData = [
-        // Encabezado #1
+
         ['Enright D','Enright %','6MW Work','DSP','Max test HR','Max test HR %'],
         [
           enrightD ? `${enrightD.toFixed(1)} mts` : 'No existeix',
@@ -270,9 +264,9 @@ const TestDetails = () => {
           maxTestHr ? `${maxTestHr} ppm` : 'No existeix',
           maxTestHrPercent ? `${maxTestHrPercent.toFixed(1)} %` : 'No existeix'
         ],
-        // Fila vacía para separar
+
         [],
-        // Encabezado #2
+
         ['Stops','Stops time','Avg Spo2','Avg HR','Min test Spo2','6MW Speed'],
         [
           stopsText || 'No existeix',
@@ -288,12 +282,11 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsComputed1, 'Computed values');
     }
 
-    // === AVERAGE ===
+
     if (selectedTables.average) {
       const avgHeaders = ['Avg 1st min', 'Avg 2nd min', 'Avg 3rd min', 'Avg 4th min', 'Avg 5th min', 'Avg 6th min'];
       const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
 
-      // SPO2
       const avgSpo2Array = [];
       for (let min = 1; min <= 6; min++) {
         const start = (min - 1) * 60;
@@ -311,7 +304,7 @@ const TestDetails = () => {
         avgSpo2Array.push(avgS);
       }
 
-      // HR
+
       const avgHrArray = [];
       for (let min = 1; min <= 6; min++) {
         const start = (min - 1) * 60;
@@ -338,12 +331,11 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsAvg, 'Average values');
     }
 
-    // === PERIODIC ===
+
     if (selectedTables.periodic) {
       const dataP1 = (database.data || []).filter(d => d.p === 1 && d.t >= 0 && d.t < 360);
       const periodicHeaders = ['Min 1', 'Min 2', 'Min 3', 'Min 4', 'Min 5', 'Min 6'];
 
-      // SPO2
       const lastSpo2Array = [];
       for (let minute = 1; minute <= 6; minute++) {
         const start = (minute - 1) * 60;
@@ -359,7 +351,7 @@ const TestDetails = () => {
         lastSpo2Array.push(lastPoint ? lastPoint.s : null);
       }
 
-      // HR
+
       const lastHrArray = [];
       for (let minute = 1; minute <= 6; minute++) {
         const start = (minute - 1) * 60;
@@ -384,7 +376,6 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsPeriodic, 'Periodic values');
     }
 
-    // === CHECKPOINTS ===
     if (selectedTables.checkpoints) {
       const cpHeaders = ['Meters', 'Time', 'Heart rate', 'Saturation'];
       const cpData = [];
@@ -403,11 +394,10 @@ const TestDetails = () => {
       XLSX.utils.book_append_sheet(wb, wsCheckpoints, 'Checkpoints');
     }
 
-    // Finalmente, guardamos el archivo
+
     XLSX.writeFile(wb, '6MWT_data.xlsx');
   };
 
-  // == Gráficos (fuera del PDF) ==
   const testData = database.data || [];
   const spoData = testData.map(item => ({ x: item.t, y: item.s }));
   const hrData = testData.map(item => ({ x: item.t, y: item.h }));

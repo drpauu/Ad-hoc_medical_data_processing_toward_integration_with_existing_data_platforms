@@ -1,9 +1,7 @@
-// src/pages/TestList.js
-
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../styles/hmd-menu.css'; // estilos del menú lateral
+import '../styles/hmd-menu.css';
 
 const TestList = () => {
   const { t } = useTranslation();
@@ -13,7 +11,6 @@ const TestList = () => {
   const [filteredTests, setFilteredTests] = useState([]);
   const [distanceFilter, setDistanceFilter] = useState('');
 
-  // Cargar tests al montar
   useEffect(() => {
     fetch('http://localhost:5000/api/tests')
       .then(res => {
@@ -27,10 +24,6 @@ const TestList = () => {
       .catch(err => console.error('Error al obtener los tests:', err));
   }, []);
 
-  /**
-   * Filtra por la distancia exacta de conos.
-   * Campo en BBDD → test.test.cone_distance
-   */
   const handleFilter = () => {
     if (distanceFilter === '') {
       setFilteredTests(tests);
@@ -51,7 +44,6 @@ const TestList = () => {
     setFilteredTests(newList);
   };
 
-  /** Estilos inline iguales al botón PDF */
   const buttonStyle = {
     backgroundColor: '#00407C',
     color: '#FFFFFF',
@@ -68,8 +60,6 @@ const TestList = () => {
   return (
     <div>
       <h2>{t('testList.title')}</h2>
-
-      {/* Bloque de filtro por distancia (cone_distance) */}
       <div
         style={{
           margin: '1rem 0',
@@ -101,7 +91,6 @@ const TestList = () => {
           {t('dates.dist')}
         </button>
       </div>
-
       {filteredTests.length > 0 ? (
         <ul className="hmd-menu">
           {filteredTests.map(test => {

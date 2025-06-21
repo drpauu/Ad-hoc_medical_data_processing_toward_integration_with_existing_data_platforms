@@ -1,14 +1,14 @@
-deactivate           # por si el venv seguía activo
+deactivate
 source .venv/bin/activate
 
-# CU 1 – carga y validación sintáctica
+# CU 1 
 python etl_cli.py load datos/tu_archivo.json
 
-# CU 2 – previsualización de esquema
+# CU 2
 python etl_cli.py preview /tmp/ingest/tu_archivo.json
 
-# CU 3 – ejecución ETL (ahora upsert directo en tests)
+# CU 3 
 python etl_cli.py execute /tmp/ingest/tu_archivo.json
 
-# CU 4 – ver logs 
+# CU 4
 python etl_cli.py logs

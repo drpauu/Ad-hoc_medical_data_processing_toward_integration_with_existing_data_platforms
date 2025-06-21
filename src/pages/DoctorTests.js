@@ -1,20 +1,17 @@
-// src/pages/DoctorTests.js
-
 import React, { useState, useEffect } from 'react';
 import { useParams, Link, useLocation } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
-import '../styles/hmd-menu.css'; // Importar los estilos del menú
+import '../styles/hmd-menu.css';
 
 const DoctorTests = () => {
   const { t } = useTranslation();
-  const { did } = useParams(); // ID del doctor desde la URL
+  const { did } = useParams();
   const location = useLocation();
 
-  const [tests, setTests] = useState([]); // tests del doctor
-  const [filteredTests, setFilteredTests] = useState([]); // tests tras aplicar distancia
-  const [distanceFilter, setDistanceFilter] = useState(''); // valor introducido
+  const [tests, setTests] = useState([]);
+  const [filteredTests, setFilteredTests] = useState([]);
+  const [distanceFilter, setDistanceFilter] = useState('');
 
-  // Cargar tests al montar y filtrar por doctor
   useEffect(() => {
     fetch('http://localhost:5000/api/tests')
       .then(res => {
@@ -30,10 +27,6 @@ const DoctorTests = () => {
       .catch(err => console.error('Error al obtener tests:', err));
   }, [did]);
 
-  /**
-   * Filtra la lista por coincidencia exacta de distancia de conos.
-   * Campo en BBDD → test.test.cone_distance
-   */
   const handleFilter = () => {
     if (distanceFilter === '') {
       setFilteredTests(tests);
@@ -54,7 +47,6 @@ const DoctorTests = () => {
     setFilteredTests(newList);
   };
 
-  /** Estilos inline iguales al botón PDF */
   const buttonStyle = {
     backgroundColor: '#00407C',
     color: '#FFFFFF',
@@ -72,7 +64,6 @@ const DoctorTests = () => {
     <div>
       <h2>{t('doctorTests.title', { did })}</h2>
 
-      {/* Bloque de filtro por distancia (cone_distance) */}
       <div
         style={{
           margin: '1rem 0',

@@ -2,7 +2,6 @@ from pymongo import MongoClient, WriteConcern
 from pymongo.server_api import ServerApi
 from config.settings import settings
 
-# Cliente global (lanzará excepción si la URI es errónea)
 _client = MongoClient(
     settings.MONGO_URI,
     server_api=ServerApi("1"),

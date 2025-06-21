@@ -30,7 +30,7 @@ def preview_file(path: str):
         example = next(v for _k, v in flatten(sample[0]) if _k == k)
         click.echo(f"{k:40} {','.join(typ):30} {example!r}")
 
-    # comprobar faltantes
+
     missing = [f for f in settings.REQUIRED_FIELDS if f not in schema]
     if missing:
         click.secho(f"\n⚠ Campos obligatorios ausentes: {missing}", fg="red")

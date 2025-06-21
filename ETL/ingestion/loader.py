@@ -6,12 +6,11 @@ from uuid import uuid4
 from jsonschema import validate, ValidationError
 from config.settings import settings
 from db.client import raw_coll
-from config.schema import json_schema   # cargamos una sola vez
+from config.schema import json_schema  
 import logging
 
 logger = logging.getLogger(__name__)
 
-# ---- carga esquema en memoria ----
 with open(Path(__file__).parent.parent / "config" / "schema.json", "r") as fh:
     json_schema = json.load(fh)
 
@@ -48,7 +47,7 @@ def load_file(path: str) -> Path:
         dest.unlink(missing_ok=True)
         raise click.ClickException(f"JSON malformado: {e}")
 
-    # Los ejemplos son un array → normalizamos a lista
+
     if isinstance(data, dict):
         data = [data]
 

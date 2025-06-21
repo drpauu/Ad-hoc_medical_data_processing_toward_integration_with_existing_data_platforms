@@ -6,7 +6,7 @@ import datetime as dt
 LOG_DIR = Path("logs_storage")
 LOG_DIR.mkdir(exist_ok=True)
 
-# Configura logging raíz sólo una vez
+
 logging.basicConfig(
     filename=LOG_DIR / "etl_cli.log",
     level=logging.INFO,

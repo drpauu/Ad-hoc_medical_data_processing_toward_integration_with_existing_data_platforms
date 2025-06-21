@@ -48,7 +48,6 @@
     color: var(--color-text-dark);
   }
 
-  /* Alterna fondo suave en filas pares */
   .row:nth-child(even) .cell {
     background-color: var(--color-bg-light);
   }

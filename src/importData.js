@@ -5,7 +5,7 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Conectado a Mongo Atlas'))
   .catch(err => console.error('Error de conexión', err));
 
-// Esquema que coincide con la estructura de tu JSON
+
 const dataSchema = new mongoose.Schema({
   test: {
     pid: String,
@@ -56,10 +56,10 @@ const dataSchema = new mongoose.Schema({
 
 const DataModel = mongoose.model('Data', dataSchema);
 
-// Importa el JSON
+
 const jsonData = require('./database.json');
 
-// Inserta el documento
+
 DataModel.create(jsonData)
   .then(() => {
     console.log('Documento guardado con la estructura del JSON');

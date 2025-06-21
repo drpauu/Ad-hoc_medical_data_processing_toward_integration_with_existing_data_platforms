@@ -25,19 +25,19 @@ def cast_numeric(val: Any) -> Any:
 
 def transform_row(doc: dict) -> dict:
     """Normaliza tipos y rellena valores faltantes."""
-    # --- clave única ---
+
     if "tid" not in doc["test"]:
         doc["test"]["tid"] = uuid4().hex
 
-    # --- date a datetime →
+
     date_str = doc["test"].get("date")
     if date_str and isinstance(date_str, str):
         try:
             doc["test"]["date"] = datetime.fromisoformat(date_str.replace("Z", "+00:00"))
         except ValueError:
-            pass  # se deja tal cual si no encaja
+            pass  
 
-    # --- numeric casts (spo, hr, meters, …) ---
+
     numeric_paths = [
         ("initial", "spo"), ("initial", "hr"), ("initial", "d"), ("initial", "f"),
         ("final", "meters"), ("final", "d"), ("final", "f"),
@@ -51,7 +51,7 @@ def transform_row(doc: dict) -> dict:
         if key in section:
             section[key] = cast_numeric(section[key])
 
-    # --- arrays data/pascon/stops: numeric casts ad hoc ---
+
     for arrkey, numeric_fields in [
         ("data", ["t", "s", "h", "p"]),
         ("pascon", ["t", "s", "h", "n"]),
@@ -92,7 +92,7 @@ def run_etl(path: str):
             logger.error("Error al transformar registro: %s", exc, exc_info=True)
             report["errors"] += 1
 
-    # última tanda
+
     if ops:
         res = raw_coll.bulk_write(ops, ordered=False)
         report["inserted"]  += res.upserted_count

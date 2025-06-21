@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import logo from '../assets/logo-web.png'; // Ajusta la extensión si es .png u otro formato
+import logo from '../assets/logo-web.png';
 
 const Header = () => {
   const { i18n } = useTranslation();
@@ -8,7 +8,6 @@ const Header = () => {
     i18n.changeLanguage(lng);
   };
 
-  // Wrapper para centrar y aplicar márgenes al fondo
   const headerWrapperStyle = {
     width: '100%',
     display: 'flex',
@@ -16,19 +15,17 @@ const Header = () => {
     backgroundColor: 'transparent'
   };
 
-  // Contenedor centralizado con fondo azul y márgenes de la página
   const containerStyle = {
-    maxWidth: '1200px',    // Ajusta al ancho de tu sitio
+    maxWidth: '1200px',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
-    padding: '0 20px',     // Espaciado interior hasta los márgenes
-    height: '100px',       // Aumentado para mayor anchura vertical
+    padding: '0 20px',
+    height: '100px',
     backgroundColor: '#0067B1'
   };
 
-  // Wrapper para idiomas y buscador, apilados verticalmente
   const rightGroupStyle = {
     display: 'flex',
     flexDirection: 'column',
@@ -52,11 +49,11 @@ const Header = () => {
   const navStyle = {
     display: 'flex',
     alignItems: 'center',
-    marginBottom: '8px'     // Aumentado para separación acorde al nuevo alto
+    marginBottom: '8px'
   };
 
   const inputStyle = {
-    height: '30px',         // Aumentado para adecuarse al nuevo alto
+    height: '30px',
     border: 'none',
     borderRadius: '4px 0 0 4px',
     padding: '0 10px',
@@ -64,7 +61,7 @@ const Header = () => {
   };
 
   const buttonStyle = {
-    height: '30px',         // Aumentado para adecuarse al nuevo alto
+    height: '30px',
     border: 'none',
     borderRadius: '0 4px 4px 0',
     backgroundColor: '#00AEEF',
@@ -76,11 +73,9 @@ const Header = () => {
   return (
     <header style={headerWrapperStyle}>
       <div style={containerStyle}>
-        {/* Logo */}
         <a href="/">
           <img src={logo} alt="Hospital del Mar Barcelona" style={{ height: '60px' }} />
         </a>
-
         <div style={rightGroupStyle}>
           <nav style={navStyle}>
             <a
@@ -116,7 +111,6 @@ const Header = () => {
               ENGLISH
             </a>
           </nav>
-          
         </div>
       </div>
     </header>

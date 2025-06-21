@@ -1,4 +1,3 @@
-// src/App.js
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
@@ -17,16 +16,14 @@ function App() {
       <Header />
       <div className="content">
         <Routes>
-          {/* — páginas generales — */}
+
           <Route path="/"            element={<Home />} />
           <Route path="/test-list"   element={<TestList />} />
 
-          {/* — doctores — */}
           <Route path="/doctors-list"            element={<DoctorsList />} />
           <Route path="/doctors/:did"            element={<DoctorTests />} />
           <Route path="/doctors/:did/test/:id"   element={<TestDetails />} />
 
-          {/* ruta absoluta por si se llega desde otros lugares */}
           <Route path="/test/:id"    element={<TestDetails />} />
         </Routes>
       </div>
