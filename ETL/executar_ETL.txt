@@ -2,13 +2,13 @@ deactivate
 source .venv/bin/activate
 
 # CU 1 
-python etl_cli.py load datos/tu_archivo.json
+python etl_cli.py load datos/---.json
 
 # CU 2
-python etl_cli.py preview /tmp/ingest/tu_archivo.json
+python etl_cli.py preview /tmp/ingest/prova_1.json
 
 # CU 3 
-python etl_cli.py execute /tmp/ingest/tu_archivo.json
+python etl_cli.py execute /tmp/ingest/prova_1.json
 
 # CU 4
 python etl_cli.py logs

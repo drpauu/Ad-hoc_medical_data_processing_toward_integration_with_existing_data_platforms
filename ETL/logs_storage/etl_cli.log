@@ -1,13 +1,2 @@
-2025-06-16 02:25:41,668 [INFO] ingestion.loader: Archivo /tmp/ingest/1c6ad4da-a066-76bd-78d1-67c72a1da776.json cargado con 1 documentos
-2025-06-16 02:26:42,526 [INFO] ingestion.loader: Archivo /tmp/ingest/1c6ad4da-a066-76bd-78d1-67c72a1da776.json cargado con 1 documentos
-2025-06-16 02:27:29,738 [INFO] ingestion.loader: Archivo /tmp/ingest/1c086aff-126b-66f4-50fa-67371e300447.json cargado con 1 documentos
-2025-06-16 02:28:58,730 [INFO] ingestion.loader: Archivo /tmp/ingest/1c6ad4da-a066-76bd-78d1-67c72a1da776.json cargado con 1 documentos
-2025-06-16 02:29:25,957 [INFO] pipeline.etl: ETL completada – {'inserted': 1, 'modified': 0, 'errors': 0}
-2025-06-16 02:39:57,593 [INFO] ingestion.loader: Archivo /tmp/ingest/database.json cargado con 1 documentos
-2025-06-16 02:40:37,664 [INFO] pipeline.etl: ETL completada – {'inserted': 0, 'modified': 1, 'errors': 0}
-2025-06-16 02:42:16,662 [INFO] ingestion.loader: Archivo /tmp/ingest/databaseV2.json cargado con 1 documentos
-2025-06-16 02:42:55,408 [INFO] pipeline.etl: ETL completada – {'inserted': 0, 'modified': 1, 'errors': 0}
-2025-06-16 02:54:05,945 [INFO] ingestion.loader: Archivo /tmp/ingest/databaseV2.json cargado con 1 documentos
-2025-06-16 02:54:28,499 [INFO] pipeline.etl: ETL completada – {'inserted': 0, 'modified': 0, 'errors': 0}
-2025-06-16 02:56:56,767 [INFO] ingestion.loader: Archivo /tmp/ingest/data.json cargado con 1 documentos
-2025-06-16 02:57:31,403 [INFO] pipeline.etl: ETL completada – {'inserted': 1, 'modified': 0, 'errors': 0}
+2025-07-03 14:03:00,037 [INFO] ingestion.loader: Archivo /tmp/ingest/defensaV2.json cargado con 1 documentos
+2025-07-03 14:05:17,263 [INFO] pipeline.etl: ETL completada – {'inserted': 1, 'modified': 0, 'errors': 0}
